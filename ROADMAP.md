@@ -5,7 +5,7 @@ This roadmap is directional and best-effort. It is not a delivery-date commitmen
 ## Now
 
 1. Use `v0.1.0-rc.1` as the first validated pre-release for controlled testing.
-2. Collect real-device Safari/iPhone/iPad validation before any production-ready claim.
+2. Collect real-device Safari/iPhone/iPad validation using the documented checklist before any production-ready claim.
 3. Keep the scheduled upstream drift monitor healthy and review any generated drift PRs before changing compatibility claims.
 
 ## Completed candidate gates

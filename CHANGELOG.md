@@ -13,6 +13,7 @@ All notable changes to this project are documented here. This project follows se
 - Public-safe validation reports for the conversion candidate and unchanged Memtly media lifecycle.
 - Release workflow for publishing pre-release images to GitHub Container Registry.
 - Public upstream drift monitor for the pinned Memtly refs and watched patch-surface files.
+- Real-device Safari validation checklist for iPhone/iPad hardware testing before production-ready claims.
 
 ### Validated
 

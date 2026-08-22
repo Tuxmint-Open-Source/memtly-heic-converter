@@ -23,6 +23,6 @@ The current release-candidate source line is backed by public-safe reports:
 ## Unsupported / unknown
 
 - Memtly versions other than `1.0.6` are unvalidated.
-- Real iPhone/iPad Safari hardware validation is not complete.
+- Real iPhone/iPad Safari hardware validation is not complete; see the [real-device Safari validation checklist](real-device-safari-validation.md).
 - Original HEIC preservation, EXIF/XMP preservation, Live Photo auxiliaries, depth maps, and multi-image HEIF content are not supported by this browser-conversion release candidate.
 - `latest` image tags are intentionally not published for pre-releases.

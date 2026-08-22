@@ -36,4 +36,4 @@ A change is not complete until applicable gates pass.
 - Current Chrome/Chromium and Firefox desktop.
 - Current Android Chrome when hardware is available.
 
-Automated browser emulation is useful but is not represented as real iPhone hardware validation.
+Automated browser emulation is useful but is not represented as real iPhone hardware validation. Use the [real-device Safari validation checklist](docs/real-device-safari-validation.md) before making any production-ready claim.
