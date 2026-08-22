@@ -37,3 +37,16 @@ docker run --rm --entrypoint dotnet memtly-heic-converter:1.0.6-foundation   Mem
 ```
 
 A compatibility claim additionally requires runtime smoke tests. A successful build alone does not establish HEIC support.
+
+## Runtime smoke test
+
+The self-cleaning smoke test logs in through Memtly's CSRF-protected AJAX flow, creates a temporary gallery, uploads a generated ordinary PNG through `UploadFileChunk`, completes the batch, and deletes the gallery. It never prints credentials.
+
+```bash
+MEMTLY_SMOKE_BASE_URL=https://memtly.example.com \
+MEMTLY_SMOKE_USERNAME=admin \
+MEMTLY_SMOKE_PASSWORD='use-a-secret-source' \
+  ./scripts/smoke-foundation.py
+```
+
+Use only against an isolated validation deployment: the script deliberately exercises create, upload, and delete lifecycle operations.

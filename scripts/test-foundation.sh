@@ -21,6 +21,7 @@ grep -Fq 'git apply --check' Dockerfile
 grep -Fq 'io.tuxmint.memtly.heic.enabled="false"' Dockerfile
 
 test -f patches/series
+PYTHONPYCACHEPREFIX="${TMPDIR:-/tmp}/memtly-heic-pycache" python3 -m py_compile scripts/smoke-foundation.py
 while IFS= read -r patch; do
   case "$patch" in ''|'#'*) continue ;; esac
   test -f "patches/$patch"
