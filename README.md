@@ -7,7 +7,7 @@ A feature-flagged build overlay for converting HEIC/HEIF still images to JPEG **
 
 ## Status
 
-**Planning and reproducible-build foundation. Not ready for production.**
+**Reproducible-build foundation under review. Not ready for production and HEIC conversion is not yet implemented.**
 
 The first compatibility target is:
 
@@ -16,6 +16,17 @@ The first compatibility target is:
 | `main` | `1.0.6` | `d9b7298866c8cafbd515a6bf5e260e1d0423f262` | implementation pending |
 
 Follow the [public roadmap](ROADMAP.md) and the pinned roadmap issue for current work.
+
+## Foundation image
+
+Issue #1 establishes an unmodified Memtly `1.0.6` control image before conversion code is introduced. The build verifies the annotated Community tag, Community commit, Core gitlink, and checked-out Core commit, then applies the committed patch series with drift checks.
+
+```bash
+./scripts/test-foundation.sh
+docker build --pull=false -t memtly-heic-converter:1.0.6-foundation .
+```
+
+See [build provenance](docs/build-provenance.md). A successful foundation build does **not** claim HEIC support.
 
 ## Intended behavior
 
