@@ -31,8 +31,8 @@ The default policy receives that narrow worker allowance. This overlay does not 
 ## Detection and failure behavior
 
 - Reads at most the first 64 KiB and parses ISO-BMFF boxes.
-- Requires an HEVC HEIF major or compatible brand (`heic`, `heix`, `hevc`, or `hevx`).
-- Does not trust MIME type or filename extension alone.
+- Requires an HEVC HEIF major or compatible brand (`heic`, `heix`, `hevc`, or `hevx`), including the `mif3`/`heic` marker emitted by current `libheif` mini fixtures.
+- Does not trust MIME type or filename extension alone; hinted but unclassified HEIC/HEIF is rejected before upload.
 - Converts one file at a time.
 - Omits failed HEIC files rather than uploading their raw bytes.
 - Preserves unaffected files in a mixed selection.

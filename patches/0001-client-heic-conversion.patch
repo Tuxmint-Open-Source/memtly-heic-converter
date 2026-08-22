@@ -93,14 +93,14 @@ index 7b8b021..33ce243 100644
      "jquery-loading": "^0.2.8",
      "jquery-qrcode": "^1.0.0",
 diff --git a/Memtly.Core/Memtly.Core/src/modules/upload-box/index.js b/Memtly.Core/Memtly.Core/src/modules/upload-box/index.js
-index 9a66ff4..98a282a 100644
+index 9a66ff4..7ea152d 100644
 --- a/Memtly.Core/Memtly.Core/src/modules/upload-box/index.js
 +++ b/Memtly.Core/Memtly.Core/src/modules/upload-box/index.js
 @@ -4,12 +4,15 @@ import { displayLoader, hideLoader } from '@modules/loader';
  import { displayIdentityCheck } from '@modules/identity-check';
  import { refreshGalleryPage } from '@pages/gallery/gallery';
  import { getFileChecksum } from '@utilities/files';
-+import { convertHeicToJpeg, isHeicFile } from '@utilities/heic.mjs';
++import { convertHeicToJpeg, hasHeicHint, isHeicFile } from '@utilities/heic.mjs';
  
  class UploadBox {
      constructor() {
@@ -135,7 +135,7 @@ index 9a66ff4..98a282a 100644
          input.attr('multiple', '');
          input.removeAttr('capture');
      }
-@@ -240,8 +256,42 @@ class UploadBox {
+@@ -240,8 +256,45 @@ class UploadBox {
          return file.type.toLowerCase().startsWith('video/');
      }
  
@@ -156,7 +156,8 @@ index 9a66ff4..98a282a 100644
 +                if (preparationGeneration !== this.preparationGeneration) return;
 +                const file = files[index];
 +                try {
-+                    if (await isHeicFile(file)) {
++                    const isHeic = await isHeicFile(file);
++                    if (isHeic) {
 +                        displayLoader(`Preparing photo ${index + 1}/${files.length}...`);
 +                        const converted = await this.queueHeicConversion(file);
 +                        if (preparationGeneration !== this.preparationGeneration) {
@@ -164,6 +165,8 @@ index 9a66ff4..98a282a 100644
 +                            return;
 +                        }
 +                        preparedFiles.push(converted);
++                    } else if (hasHeicHint(file)) {
++                        throw new Error('Unsupported or malformed HEIC/HEIF file');
 +                    } else {
 +                        preparedFiles.push(file);
 +                    }
@@ -178,7 +181,7 @@ index 9a66ff4..98a282a 100644
  
          // Remove unaccepted file types
          files = files.filter(item => {
-@@ -252,9 +302,15 @@ class UploadBox {
+@@ -252,9 +305,15 @@ class UploadBox {
              return isAllowed;
          });
  
@@ -195,7 +198,7 @@ index 9a66ff4..98a282a 100644
          await this.imageUpload(dataRefs);
      }
  
-@@ -301,7 +357,7 @@ class UploadBox {
+@@ -301,7 +360,7 @@ class UploadBox {
  
          let uploadedCount = 0;
          let requiresReview = true;
@@ -206,10 +209,10 @@ index 9a66ff4..98a282a 100644
              if (fileIndex < dataRefs.files.length) {
 diff --git a/Memtly.Core/Memtly.Core/src/modules/utilities/heic.mjs b/Memtly.Core/Memtly.Core/src/modules/utilities/heic.mjs
 new file mode 100644
-index 0000000..24e5fca
+index 0000000..98005aa
 --- /dev/null
 +++ b/Memtly.Core/Memtly.Core/src/modules/utilities/heic.mjs
-@@ -0,0 +1,116 @@
+@@ -0,0 +1,122 @@
 +const HEVC_BRANDS = new Set(['heic', 'heix', 'hevc', 'hevx']);
 +const DEFAULT_SCAN_BYTES = 64 * 1024;
 +
@@ -251,7 +254,9 @@ index 0000000..24e5fca
 +        if (type === 'ftyp') {
 +            if (size < headerSize + 8) return false;
 +            const majorBrand = readBrand(view, offset + headerSize);
++            const minorBrand = readBrand(view, offset + headerSize + 4);
 +            if (HEVC_BRANDS.has(majorBrand)) return true;
++            if ((majorBrand === 'mif1' || majorBrand === 'mif3') && HEVC_BRANDS.has(minorBrand)) return true;
 +
 +            for (let brandOffset = offset + headerSize + 8; brandOffset + 4 <= offset + size; brandOffset += 4) {
 +                if (HEVC_BRANDS.has(readBrand(view, brandOffset))) return true;
@@ -263,6 +268,10 @@ index 0000000..24e5fca
 +    }
 +
 +    return false;
++}
++
++export function hasHeicHint(file) {
++    return /\.(heic|heif)$/i.test(file?.name || '') || /^(image\/heic|image\/heif|image\/heic-sequence|image\/heif-sequence)$/i.test(file?.type || '');
 +}
 +
 +export async function isHeicFile(file, maxScanBytes = DEFAULT_SCAN_BYTES) {
@@ -328,13 +337,13 @@ index 0000000..24e5fca
 +}
 diff --git a/Memtly.Core/tests/heic-classifier.test.mjs b/Memtly.Core/tests/heic-classifier.test.mjs
 new file mode 100644
-index 0000000..3257592
+index 0000000..1087416
 --- /dev/null
 +++ b/Memtly.Core/tests/heic-classifier.test.mjs
-@@ -0,0 +1,68 @@
+@@ -0,0 +1,76 @@
 +import assert from 'node:assert/strict';
 +import test from 'node:test';
-+import { hasHevcHeifBrand, isHeicFile } from '../Memtly.Core/src/modules/utilities/heic.mjs';
++import { hasHeicHint, hasHevcHeifBrand, isHeicFile } from '../Memtly.Core/src/modules/utilities/heic.mjs';
 +
 +function box(type, payload = []) {
 +    const bytes = new Uint8Array(8 + payload.length);
@@ -345,9 +354,10 @@ index 0000000..3257592
 +    return bytes;
 +}
 +
-+function ftyp(major, compatible = []) {
++function ftyp(major, compatible = [], minor = '\0\0\0\0') {
 +    const payload = new Uint8Array(8 + (compatible.length * 4));
 +    for (let index = 0; index < 4; index++) payload[index] = major.charCodeAt(index);
++    for (let index = 0; index < 4; index++) payload[4 + index] = minor.charCodeAt(index);
 +    compatible.forEach((brand, brandIndex) => {
 +        for (let index = 0; index < 4; index++) payload[8 + (brandIndex * 4) + index] = brand.charCodeAt(index);
 +    });
@@ -371,9 +381,10 @@ index 0000000..3257592
 +    }
 +});
 +
-+test('accepts generic mif1/mif3 only with a compatible HEVC brand', () => {
++test('accepts generic mif1/mif3 with a compatible HEVC brand or known libheif minor marker', () => {
 +    assert.equal(hasHevcHeifBrand(ftyp('mif1', ['heic']).buffer), true);
 +    assert.equal(hasHevcHeifBrand(ftyp('mif3', ['heic']).buffer), true);
++    assert.equal(hasHevcHeifBrand(ftyp('mif3', [], 'heic').buffer), true);
 +    assert.equal(hasHevcHeifBrand(ftyp('mif1').buffer), false);
 +    assert.equal(hasHevcHeifBrand(ftyp('mif3').buffer), false);
 +});
@@ -393,6 +404,12 @@ index 0000000..3257592
 +    const emptyMime = new File([ftyp('mif3', ['heic'])], 'camera.bin', { type: '' });
 +    assert.equal(await isHeicFile(fake), false);
 +    assert.equal(await isHeicFile(emptyMime), true);
++});
++
++test('recognizes extension and MIME hints for fail-closed handling', () => {
++    assert.equal(hasHeicHint(new File(['x'], 'photo.heic', { type: '' })), true);
++    assert.equal(hasHeicHint(new File(['x'], 'photo.bin', { type: 'image/heif' })), true);
++    assert.equal(hasHeicHint(new File(['x'], 'photo.jpg', { type: 'image/jpeg' })), false);
 +});
 +
 +test('does not read beyond the classifier scan bound', async () => {
