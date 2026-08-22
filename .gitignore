@@ -12,3 +12,5 @@ coverage/
 *.dump
 *.sql
 backups/
+test-results/
+playwright-report/

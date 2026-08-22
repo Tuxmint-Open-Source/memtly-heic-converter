@@ -26,7 +26,7 @@ Issue #1 established the merged Memtly `1.0.6` control image. The build verifies
 docker build --pull=false -t memtly-heic-converter:1.0.6-heic-candidate .
 ```
 
-See [build provenance](docs/build-provenance.md), [browser conversion](docs/browser-conversion.md), and the public-safe [candidate validation report](docs/validation-heic-candidate.md). Conversion remains disabled at runtime unless explicitly enabled.
+See [build provenance](docs/build-provenance.md), [browser conversion](docs/browser-conversion.md), [fixture provenance](docs/fixture-provenance.md), and the public-safe [candidate validation report](docs/validation-heic-candidate.md). Conversion remains disabled at runtime unless explicitly enabled.
 
 ## Intended behavior
 

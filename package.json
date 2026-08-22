@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:fixtures": "node tests/scripts/verify-fixtures.mjs",
+    "test:browser": "playwright test tests/browser/heic-upload.spec.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1"
+  }
+}

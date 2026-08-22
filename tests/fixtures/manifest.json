@@ -1,0 +1,60 @@
+{
+  "fixtures": [
+    {
+      "name": "lightning_mini.heif",
+      "path": "tests/fixtures/heic/lightning_mini.heif",
+      "source": {
+        "repository": "https://github.com/strukturag/libheif",
+        "ref": "v1.20.2",
+        "path": "tests/data/lightning_mini.heif",
+        "url": "https://raw.githubusercontent.com/strukturag/libheif/v1.20.2/tests/data/lightning_mini.heif"
+      },
+      "license": {
+        "name": "libheif project license",
+        "file": "tests/fixtures/LICENSES/libheif-COPYING.txt"
+      },
+      "sha256": "47bdf004cf1abb77498917dc5a91f01b18ae1b2985113585595441b57fbf4a84",
+      "bytes": 4726,
+      "fileType": "ISO Media",
+      "dimensions": "not asserted; compact classifier/conformance fixture without a decodable display stream in ffprobe",
+      "metadataInspection": "Small upstream test fixture. `file` identifies an ISO media container; no personal-image metadata is used by this test corpus.",
+      "purpose": "Classifier coverage for a compact libheif HEIF file that uses a mif3/heic marker pattern.",
+      "expected": "detected as HEIC/HEIF content"
+    },
+    {
+      "name": "heic2any-demo-1.heic",
+      "path": "tests/fixtures/heic/heic2any-demo-1.heic",
+      "source": {
+        "repository": "https://github.com/alexcorvi/heic2any",
+        "ref": "3428539e643e112323a5b8a2c77c6402cb1372f6",
+        "path": "demo/1.heic",
+        "url": "https://raw.githubusercontent.com/alexcorvi/heic2any/3428539e643e112323a5b8a2c77c6402cb1372f6/demo/1.heic"
+      },
+      "license": {
+        "name": "MIT",
+        "file": "tests/fixtures/LICENSES/heic2any-LICENSE.md"
+      },
+      "sha256": "645877c52c5c656e2004b38f9520e717bbc6670541a56c098b9b7f78de496e8f",
+      "bytes": 41389,
+      "fileType": "ISO Media, HEIF Image",
+      "dimensions": "primary 1440x960 and secondary 240x160 as reported by ffprobe",
+      "metadataInspection": "Small public demo fixture from the converter project. No personal event photos or private user media are included.",
+      "purpose": "Browser conversion fixture known to decode through the selected heic2any converter.",
+      "expected": "converts to a JPEG derivative before Memtly upload"
+    }
+  ],
+  "negativeFixtures": [
+    {
+      "name": "synthetic-malformed.heic",
+      "path": "generated in tests",
+      "source": "synthetic byte sequence",
+      "license": "project test code",
+      "sha256": "not stored; generated at runtime",
+      "bytes": 4,
+      "dimensions": "none",
+      "metadataInspection": "contains only the bytes ff d8 ff d9 and no HEIF container metadata",
+      "purpose": "Fail-closed handling for HEIC-hinted malformed input",
+      "expected": "rejected before upload"
+    }
+  ]
+}
