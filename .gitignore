@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+artifacts/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+*.dump
+*.sql
+backups/
