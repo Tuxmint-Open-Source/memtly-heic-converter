@@ -1,0 +1,402 @@
+diff --git a/Memtly.Core/Memtly.Core/Constants/MemtlyConfiguration.cs b/Memtly.Core/Memtly.Core/Constants/MemtlyConfiguration.cs
+index bf6eef0..34da9b9 100644
+--- a/Memtly.Core/Memtly.Core/Constants/MemtlyConfiguration.cs
++++ b/Memtly.Core/Memtly.Core/Constants/MemtlyConfiguration.cs
+@@ -120,6 +120,10 @@
+             public const string UploadPeriod = "Memtly:Gallery:Upload_Period";
+             public const string AllowedFileTypes = "Memtly:Gallery:Allowed_File_Types";
+             public const string CameraUploads = "Memtly:Gallery:Camera_Uploads";
++            public const string ClientHeicConversion = "Memtly:Gallery:Client_HEIC_Conversion";
++            public const string ClientHeicMaxInputMB = "Memtly:Gallery:Client_HEIC_Max_Input_MB";
++            public const string ClientHeicMaxPixels = "Memtly:Gallery:Client_HEIC_Max_Pixels";
++            public const string ClientHeicTimeoutSeconds = "Memtly:Gallery:Client_HEIC_Timeout_Seconds";
+             public const string ShowFilters = "Memtly:Gallery:Show_Filters";
+             public const string ShowPendingUploads = "Memtly:Gallery:Show_Pending_Uploads";
+ 
+diff --git a/Memtly.Core/Memtly.Core/Extensions/StartupExtensions.cs b/Memtly.Core/Memtly.Core/Extensions/StartupExtensions.cs
+index 33f1f43..476f4e2 100644
+--- a/Memtly.Core/Memtly.Core/Extensions/StartupExtensions.cs
++++ b/Memtly.Core/Memtly.Core/Extensions/StartupExtensions.cs
+@@ -183,7 +183,7 @@ namespace Memtly.Core.Extensions
+                         context.Response.Headers.Append("X-Content-Type-Options", config.GetOrDefault(MemtlyConfiguration.Security.Headers.XContentTypeOptions, "nosniff"));
+ 
+                         context.Response.Headers.Remove("Content-Security-Policy");
+-                        context.Response.Headers.Append("Content-Security-Policy", config.GetOrDefault(MemtlyConfiguration.Security.Headers.CSP, $"default-src 'self' {(!string.IsNullOrWhiteSpace(baseUrlCSP) ? baseUrlCSP : "http://localhost:* ws://localhost:*")}; script-src 'self' 'unsafe-inline' 'unsafe-eval'{(!string.IsNullOrWhiteSpace(trackersUrlCSP) ? $" {trackersUrlCSP}" : string.Empty)}; style-src 'self' 'unsafe-inline'; connect-src 'self' {(!string.IsNullOrWhiteSpace(baseUrlCSP) ? baseUrlCSP : "http://localhost:* ws://localhost:*")}{(!string.IsNullOrWhiteSpace(trackersUrlCSP) ? $" {trackersUrlCSP}" : string.Empty)}; font-src 'self'; img-src 'self' https://github.com/ https://avatars.githubusercontent.com/ data:; frame-src 'self'; frame-ancestors 'self';"));
++                        context.Response.Headers.Append("Content-Security-Policy", config.GetOrDefault(MemtlyConfiguration.Security.Headers.CSP, $"default-src 'self' {(!string.IsNullOrWhiteSpace(baseUrlCSP) ? baseUrlCSP : "http://localhost:* ws://localhost:*")}; script-src 'self' 'unsafe-inline' 'unsafe-eval'{(!string.IsNullOrWhiteSpace(trackersUrlCSP) ? $" {trackersUrlCSP}" : string.Empty)}; style-src 'self' 'unsafe-inline'; connect-src 'self' {(!string.IsNullOrWhiteSpace(baseUrlCSP) ? baseUrlCSP : "http://localhost:* ws://localhost:*")}{(!string.IsNullOrWhiteSpace(trackersUrlCSP) ? $" {trackersUrlCSP}" : string.Empty)}; font-src 'self'; img-src 'self' https://github.com/ https://avatars.githubusercontent.com/ data:; worker-src 'self' blob:; frame-src 'self'; frame-ancestors 'self';"));
+ 
+                         await next();
+                     });
+diff --git a/Memtly.Core/Memtly.Core/Views/Gallery/Index.cshtml b/Memtly.Core/Memtly.Core/Views/Gallery/Index.cshtml
+index b1a07ed..e3bf277 100644
+--- a/Memtly.Core/Memtly.Core/Views/Gallery/Index.cshtml
++++ b/Memtly.Core/Memtly.Core/Views/Gallery/Index.cshtml
+@@ -50,10 +50,14 @@
+ {
+     var allowedFileTypes = (await _settings.GetOrDefault(MemtlyConfiguration.Gallery.AllowedFileTypes, ".jpg,.jpeg,.png,.mp4,.mov", Model?.Gallery?.Id))?.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)?.Select(x => $".{x.Trim('.')}")?.OrderBy(x => x)?.ToList() ?? new List<string>();
+     var identityRequired = await _settings.GetOrDefault(MemtlyConfiguration.IdentityCheck.RequireIdentityForUpload, false);
++    var clientHeicConversion = _config.GetOrDefault(MemtlyConfiguration.Gallery.ClientHeicConversion, false);
++    var clientHeicMaxInputMB = _config.GetOrDefault(MemtlyConfiguration.Gallery.ClientHeicMaxInputMB, 25);
++    var clientHeicMaxPixels = _config.GetOrDefault(MemtlyConfiguration.Gallery.ClientHeicMaxPixels, 40000000L);
++    var clientHeicTimeoutSeconds = _config.GetOrDefault(MemtlyConfiguration.Gallery.ClientHeicTimeoutSeconds, 45);
+ 
+     <header class="file-uploader bg-dark py-1 py-lg-4">
+         <div class="container px-0 px-lg-2">
+-            <form class="file-uploader-form" data-gallery-type="@Model!.Gallery.Type.ToString().ToLower()" data-identity-required="@((identityRequired && (string.IsNullOrWhiteSpace(Context?.Session?.GetString(SessionKey.Viewer.Identity)) || (Context?.Session?.GetString(SessionKey.Viewer.Identity)?.Equals("Anonymous", StringComparison.OrdinalIgnoreCase) ?? true))).ToString().ToLower())">
++            <form class="file-uploader-form" data-gallery-type="@Model!.Gallery.Type.ToString().ToLower()" data-identity-required="@((identityRequired && (string.IsNullOrWhiteSpace(Context?.Session?.GetString(SessionKey.Viewer.Identity)) || (Context?.Session?.GetString(SessionKey.Viewer.Identity)?.Equals("Anonymous", StringComparison.OrdinalIgnoreCase) ?? true))).ToString().ToLower())" data-client-heic-conversion="@clientHeicConversion.ToString().ToLower()" data-client-heic-max-input-mb="@clientHeicMaxInputMB" data-client-heic-max-pixels="@clientHeicMaxPixels" data-client-heic-timeout-seconds="@clientHeicTimeoutSeconds">
+                 @Html.AntiForgeryToken()
+ 
+                 <fieldset class="upload_drop text-center p-4 text-center">
+@@ -65,7 +69,7 @@
+                     <p class="small my-2">@(ViewBag.IsMobile ?? false ? _localizer["Click_To_Upload"].Value : _localizer["Drag_And_Drop"].Value)</p>
+                     <p class="small my-2">(@string.Join(", ", allowedFileTypes).ToLower())</p>
+ 
+-                    <input class="position-absolute invisible upload-input" data-post-collection-id="@(Model!.Gallery.Type == GalleryType.Collection ? Model.Gallery.Id : 0)" data-post-gallery-id="@(Model!.Gallery.Type != GalleryType.Collection ? Model.Gallery.Id : 0)" data-post-key="@Model?.SecretKey" data-post-allow-camera="@(((ViewBag.IsMobile ?? false) && await _settings.GetOrDefault(MemtlyConfiguration.Gallery.CameraUploads, false)).ToString().ToLower())" type="file" multiple accept="image/*,video/*" />
++                    <input class="position-absolute invisible upload-input" data-post-collection-id="@(Model!.Gallery.Type == GalleryType.Collection ? Model.Gallery.Id : 0)" data-post-gallery-id="@(Model!.Gallery.Type != GalleryType.Collection ? Model.Gallery.Id : 0)" data-post-key="@Model?.SecretKey" data-post-allow-camera="@(((ViewBag.IsMobile ?? false) && await _settings.GetOrDefault(MemtlyConfiguration.Gallery.CameraUploads, false)).ToString().ToLower())" type="file" multiple accept="@(clientHeicConversion ? "image/*,video/*,.heic,.heif" : "image/*,video/*")" />
+                 </fieldset>
+             </form>
+         </div>
+diff --git a/Memtly.Core/Memtly.Core/package-lock.json b/Memtly.Core/Memtly.Core/package-lock.json
+index ba7cfa9..311b57d 100644
+--- a/Memtly.Core/Memtly.Core/package-lock.json
++++ b/Memtly.Core/Memtly.Core/package-lock.json
+@@ -12,6 +12,7 @@
+         "@fortawesome/fontawesome-free": "^7.1.0",
+         "@popperjs/core": "^2.11.8",
+         "bootstrap": "^5.3.8",
++        "heic2any": "0.0.4",
+         "jquery": "^3.7.1",
+         "jquery-loading": "^0.2.8",
+         "jquery-qrcode": "^1.0.0",
+@@ -2767,6 +2768,12 @@
+         "node": ">= 0.4"
+       }
+     },
++    "node_modules/heic2any": {
++      "version": "0.0.4",
++      "resolved": "https://registry.npmjs.org/heic2any/-/heic2any-0.0.4.tgz",
++      "integrity": "sha512-3lLnZiDELfabVH87htnRolZ2iehX9zwpRyGNz22GKXIu0fznlblf0/ftppXKNqS26dqFSeqfIBhAmAj/uSp0cA==",
++      "license": "MIT"
++    },
+     "node_modules/icss-utils": {
+       "version": "5.1.0",
+       "resolved": "https://registry.npmjs.org/icss-utils/-/icss-utils-5.1.0.tgz",
+diff --git a/Memtly.Core/Memtly.Core/package.json b/Memtly.Core/Memtly.Core/package.json
+index 7b8b021..33ce243 100644
+--- a/Memtly.Core/Memtly.Core/package.json
++++ b/Memtly.Core/Memtly.Core/package.json
+@@ -30,6 +30,7 @@
+     "@fortawesome/fontawesome-free": "^7.1.0",
+     "@popperjs/core": "^2.11.8",
+     "bootstrap": "^5.3.8",
++    "heic2any": "0.0.4",
+     "jquery": "^3.7.1",
+     "jquery-loading": "^0.2.8",
+     "jquery-qrcode": "^1.0.0",
+diff --git a/Memtly.Core/Memtly.Core/src/modules/upload-box/index.js b/Memtly.Core/Memtly.Core/src/modules/upload-box/index.js
+index 9a66ff4..98a282a 100644
+--- a/Memtly.Core/Memtly.Core/src/modules/upload-box/index.js
++++ b/Memtly.Core/Memtly.Core/src/modules/upload-box/index.js
+@@ -4,12 +4,15 @@ import { displayLoader, hideLoader } from '@modules/loader';
+ import { displayIdentityCheck } from '@modules/identity-check';
+ import { refreshGalleryPage } from '@pages/gallery/gallery';
+ import { getFileChecksum } from '@utilities/files';
++import { convertHeicToJpeg, isHeicFile } from '@utilities/heic.mjs';
+ 
+ class UploadBox {
+     constructor() {
+         this.maxRetries = 5;
+         this.retryDelay = 2000;
+         this.chunk_size = 10 * 1024 * 1024;
++        this.preparationGeneration = 0;
++        this.heicQueue = Promise.resolve();
+     }
+ 
+     init() {
+@@ -137,8 +140,21 @@ class UploadBox {
+         input.attr('data-post-gallery-id', galleryId);
+     }
+ 
++    isHeicConversionEnabled() {
++        return $('form.file-uploader-form').attr('data-client-heic-conversion') === 'true';
++    }
++
++    getHeicOptions() {
++        const form = $('form.file-uploader-form');
++        return {
++            maxInputBytes: parseInt(form.attr('data-client-heic-max-input-mb') || '25') * 1024 * 1024,
++            maxPixels: parseInt(form.attr('data-client-heic-max-pixels') || '40000000'),
++            timeoutMs: parseInt(form.attr('data-client-heic-timeout-seconds') || '45') * 1000
++        };
++    }
++
+     setGalleryMode(input) {
+-        input.attr('accept', 'image/*,video/*');
++        input.attr('accept', this.isHeicConversionEnabled() ? 'image/*,video/*,.heic,.heif' : 'image/*,video/*');
+         input.attr('multiple', '');
+         input.removeAttr('capture');
+     }
+@@ -240,8 +256,42 @@ class UploadBox {
+         return file.type.toLowerCase().startsWith('video/');
+     }
+ 
++    queueHeicConversion(file) {
++        const task = this.heicQueue.then(() => convertHeicToJpeg(file, this.getHeicOptions()));
++        this.heicQueue = task.catch(() => undefined);
++        return task;
++    }
++
+     async handleFiles(dataRefs) {
+         let files = [...dataRefs.files];
++        const preparationErrors = [];
++        const preparationGeneration = ++this.preparationGeneration;
++
++        if (this.isHeicConversionEnabled()) {
++            const preparedFiles = [];
++            for (let index = 0; index < files.length; index++) {
++                if (preparationGeneration !== this.preparationGeneration) return;
++                const file = files[index];
++                try {
++                    if (await isHeicFile(file)) {
++                        displayLoader(`Preparing photo ${index + 1}/${files.length}...`);
++                        const converted = await this.queueHeicConversion(file);
++                        if (preparationGeneration !== this.preparationGeneration) {
++                            hideLoader();
++                            return;
++                        }
++                        preparedFiles.push(converted);
++                    } else {
++                        preparedFiles.push(file);
++                    }
++                } catch (error) {
++                    console.error('HEIC conversion failed', error);
++                    preparationErrors.push(`${file.name}: ${error.message || 'HEIC conversion failed'}`);
++                }
++            }
++            hideLoader();
++            files = preparedFiles;
++        }
+ 
+         // Remove unaccepted file types
+         files = files.filter(item => {
+@@ -252,9 +302,15 @@ class UploadBox {
+             return isAllowed;
+         });
+ 
+-        if (!files.length) return;
++        if (!files.length) {
++            if (preparationErrors.length) {
++                displayMessage(localization.translate('Upload'), localization.translate('Upload_Failed'), preparationErrors);
++            }
++            return;
++        }
+ 
+         dataRefs.files = files;
++        dataRefs.preparationErrors = preparationErrors;
+         await this.imageUpload(dataRefs);
+     }
+ 
+@@ -301,7 +357,7 @@ class UploadBox {
+ 
+         let uploadedCount = 0;
+         let requiresReview = true;
+-        let errors = [];
++        let errors = [...(dataRefs.preparationErrors || [])];
+ 
+         const processFileUpload = async (requestId, fileIndex) => {
+             if (fileIndex < dataRefs.files.length) {
+diff --git a/Memtly.Core/Memtly.Core/src/modules/utilities/heic.mjs b/Memtly.Core/Memtly.Core/src/modules/utilities/heic.mjs
+new file mode 100644
+index 0000000..24e5fca
+--- /dev/null
++++ b/Memtly.Core/Memtly.Core/src/modules/utilities/heic.mjs
+@@ -0,0 +1,116 @@
++const HEVC_BRANDS = new Set(['heic', 'heix', 'hevc', 'hevx']);
++const DEFAULT_SCAN_BYTES = 64 * 1024;
++
++function readUint64(view, offset) {
++    const high = view.getUint32(offset);
++    const low = view.getUint32(offset + 4);
++    const value = (high * 0x100000000) + low;
++    return Number.isSafeInteger(value) ? value : null;
++}
++
++function readBrand(view, offset) {
++    return String.fromCharCode(
++        view.getUint8(offset),
++        view.getUint8(offset + 1),
++        view.getUint8(offset + 2),
++        view.getUint8(offset + 3)
++    );
++}
++
++export function hasHevcHeifBrand(buffer) {
++    const view = buffer instanceof DataView ? buffer : new DataView(buffer);
++    let offset = 0;
++
++    while (offset + 8 <= view.byteLength) {
++        let size = view.getUint32(offset);
++        const type = readBrand(view, offset + 4);
++        let headerSize = 8;
++
++        if (size === 1) {
++            if (offset + 16 > view.byteLength) return false;
++            size = readUint64(view, offset + 8);
++            headerSize = 16;
++        } else if (size === 0) {
++            size = view.byteLength - offset;
++        }
++
++        if (size === null || size < headerSize || offset + size > view.byteLength) return false;
++
++        if (type === 'ftyp') {
++            if (size < headerSize + 8) return false;
++            const majorBrand = readBrand(view, offset + headerSize);
++            if (HEVC_BRANDS.has(majorBrand)) return true;
++
++            for (let brandOffset = offset + headerSize + 8; brandOffset + 4 <= offset + size; brandOffset += 4) {
++                if (HEVC_BRANDS.has(readBrand(view, brandOffset))) return true;
++            }
++            return false;
++        }
++
++        offset += size;
++    }
++
++    return false;
++}
++
++export async function isHeicFile(file, maxScanBytes = DEFAULT_SCAN_BYTES) {
++    if (!file || typeof file.slice !== 'function') return false;
++    const scanLength = Math.min(file.size, maxScanBytes);
++    if (scanLength < 16) return false;
++    return hasHevcHeifBrand(await file.slice(0, scanLength).arrayBuffer());
++}
++
++function jpegName(name) {
++    return /\.(heic|heif)$/i.test(name) ? name.replace(/\.(heic|heif)$/i, '.jpg') : `${name}.jpg`;
++}
++
++function withTimeout(promise, timeoutMs) {
++    let timer;
++    return Promise.race([
++        promise,
++        new Promise((_, reject) => {
++            timer = setTimeout(() => reject(new Error('HEIC conversion timed out')), timeoutMs);
++        })
++    ]).finally(() => clearTimeout(timer));
++}
++
++async function assertJpeg(blob) {
++    const magic = new Uint8Array(await blob.slice(0, 3).arrayBuffer());
++    if (magic.length !== 3 || magic[0] !== 0xff || magic[1] !== 0xd8 || magic[2] !== 0xff) {
++        throw new Error('HEIC conversion did not produce a JPEG');
++    }
++}
++
++async function assertPixelLimit(blob, maxPixels) {
++    if (!maxPixels || typeof createImageBitmap !== 'function') return;
++    const bitmap = await createImageBitmap(blob);
++    try {
++        if ((bitmap.width * bitmap.height) > maxPixels) {
++            throw new Error('Converted image exceeds the pixel limit');
++        }
++    } finally {
++        bitmap.close();
++    }
++}
++
++export async function convertHeicToJpeg(file, options = {}) {
++    const maxInputBytes = options.maxInputBytes ?? (25 * 1024 * 1024);
++    const maxPixels = options.maxPixels ?? 40_000_000;
++    const timeoutMs = options.timeoutMs ?? 45_000;
++    const quality = options.quality ?? 0.92;
++
++    if (file.size > maxInputBytes) throw new Error('HEIC file exceeds the conversion size limit');
++    if (!(await isHeicFile(file))) return file;
++
++    const { default: heic2any } = await import('heic2any');
++    let converted = await withTimeout(heic2any({ blob: file, toType: 'image/jpeg', quality }), timeoutMs);
++    if (Array.isArray(converted)) converted = converted[0];
++    if (!(converted instanceof Blob)) throw new Error('HEIC conversion produced no image');
++    await assertJpeg(converted);
++    await assertPixelLimit(converted, maxPixels);
++
++    return new File([converted], jpegName(file.name), {
++        type: 'image/jpeg',
++        lastModified: file.lastModified
++    });
++}
+diff --git a/Memtly.Core/tests/heic-classifier.test.mjs b/Memtly.Core/tests/heic-classifier.test.mjs
+new file mode 100644
+index 0000000..3257592
+--- /dev/null
++++ b/Memtly.Core/tests/heic-classifier.test.mjs
+@@ -0,0 +1,68 @@
++import assert from 'node:assert/strict';
++import test from 'node:test';
++import { hasHevcHeifBrand, isHeicFile } from '../Memtly.Core/src/modules/utilities/heic.mjs';
++
++function box(type, payload = []) {
++    const bytes = new Uint8Array(8 + payload.length);
++    const view = new DataView(bytes.buffer);
++    view.setUint32(0, bytes.length);
++    for (let index = 0; index < 4; index++) bytes[4 + index] = type.charCodeAt(index);
++    bytes.set(payload, 8);
++    return bytes;
++}
++
++function ftyp(major, compatible = []) {
++    const payload = new Uint8Array(8 + (compatible.length * 4));
++    for (let index = 0; index < 4; index++) payload[index] = major.charCodeAt(index);
++    compatible.forEach((brand, brandIndex) => {
++        for (let index = 0; index < 4; index++) payload[8 + (brandIndex * 4) + index] = brand.charCodeAt(index);
++    });
++    return box('ftyp', payload);
++}
++
++function combine(...parts) {
++    const total = parts.reduce((size, part) => size + part.length, 0);
++    const bytes = new Uint8Array(total);
++    let offset = 0;
++    for (const part of parts) {
++        bytes.set(part, offset);
++        offset += part.length;
++    }
++    return bytes;
++}
++
++test('accepts HEVC HEIF major brands', () => {
++    for (const brand of ['heic', 'heix', 'hevc', 'hevx']) {
++        assert.equal(hasHevcHeifBrand(ftyp(brand).buffer), true, brand);
++    }
++});
++
++test('accepts generic mif1/mif3 only with a compatible HEVC brand', () => {
++    assert.equal(hasHevcHeifBrand(ftyp('mif1', ['heic']).buffer), true);
++    assert.equal(hasHevcHeifBrand(ftyp('mif3', ['heic']).buffer), true);
++    assert.equal(hasHevcHeifBrand(ftyp('mif1').buffer), false);
++    assert.equal(hasHevcHeifBrand(ftyp('mif3').buffer), false);
++});
++
++test('rejects AVIF and malformed boxes', () => {
++    assert.equal(hasHevcHeifBrand(ftyp('avif', ['mif1']).buffer), false);
++    assert.equal(hasHevcHeifBrand(new Uint8Array([0, 0, 0, 99, 102, 116, 121, 112]).buffer), false);
++    assert.equal(hasHevcHeifBrand(new Uint8Array(15).buffer), false);
++});
++
++test('finds ftyp after a bounded leading box', () => {
++    assert.equal(hasHevcHeifBrand(combine(box('free', [1, 2, 3, 4]), ftyp('heic')).buffer), true);
++});
++
++test('uses content rather than extension or MIME', async () => {
++    const fake = new File([new Uint8Array([0xff, 0xd8, 0xff, 0xd9])], 'renamed.heic', { type: 'image/heic' });
++    const emptyMime = new File([ftyp('mif3', ['heic'])], 'camera.bin', { type: '' });
++    assert.equal(await isHeicFile(fake), false);
++    assert.equal(await isHeicFile(emptyMime), true);
++});
++
++test('does not read beyond the classifier scan bound', async () => {
++    const prefix = new Uint8Array(64);
++    const file = new File([prefix, ftyp('heic')], 'late.heic', { type: 'image/heic' });
++    assert.equal(await isHeicFile(file, 64), false);
++});

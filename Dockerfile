@@ -36,6 +36,7 @@ ARG BUILD_CONFIGURATION=Release
 COPY --from=node /usr/local /usr/local
 WORKDIR /src
 COPY --from=source /src .
+RUN node --test ./Memtly.Core/tests/heic-classifier.test.mjs
 RUN test "$(node --version)" = "v22.23.2" && test "$(npm --version | cut -d. -f1)" -ge 10
 RUN dotnet restore -a "${TARGETARCH}" ./Memtly.Community/Memtly.Community.csproj
 WORKDIR /src/Memtly.Community
@@ -57,14 +58,16 @@ ARG MEMTLY_CORE_COMMIT=cc8c88d625136f04ae1f1063fc635f74e739bd72
 LABEL org.opencontainers.image.title="Memtly HEIC Converter" \
       org.opencontainers.image.description="Independent build overlay for Memtly Community" \
       org.opencontainers.image.source="https://github.com/Tuxmint-Open-Source/memtly-heic-converter" \
-      org.opencontainers.image.licenses="GPL-3.0-only" \
-      org.opencontainers.image.version="1.0.6-foundation" \
+      org.opencontainers.image.licenses="GPL-3.0-only AND MIT" \
+      org.opencontainers.image.version="1.0.6-heic-candidate" \
       org.opencontainers.image.revision="${MEMTLY_COMMUNITY_COMMIT}" \
       io.tuxmint.memtly.core.revision="${MEMTLY_CORE_COMMIT}" \
-      io.tuxmint.memtly.heic.enabled="false"
+      io.tuxmint.memtly.heic.available="true" \
+      io.tuxmint.memtly.heic.enabled-by-default="false"
 ENV CODE_BUILT_BY="Tuxmint-Open-Source/memtly-heic-converter"
 WORKDIR /app
 EXPOSE 5000
 COPY --from=build /app/publish .
+COPY THIRD_PARTY_NOTICES.md licenses/heic2any-MIT.txt /usr/share/licenses/memtly-heic-converter/
 RUN mkdir -p /app/config
 ENTRYPOINT ["dotnet", "Memtly.Community.dll"]

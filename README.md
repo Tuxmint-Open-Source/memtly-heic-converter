@@ -7,32 +7,32 @@ A feature-flagged build overlay for converting HEIC/HEIF still images to JPEG **
 
 ## Status
 
-**Reproducible-build foundation under review. Not ready for production and HEIC conversion is not yet implemented.**
+**Feature-flagged browser conversion candidate under review. Not ready for production.**
 
 The first compatibility target is:
 
 | Extension line | Memtly Community | Upstream commit | Status |
 | --- | --- | --- | --- |
-| `main` | `1.0.6` | `d9b7298866c8cafbd515a6bf5e260e1d0423f262` | implementation pending |
+| `main` | `1.0.6` | `d9b7298866c8cafbd515a6bf5e260e1d0423f262` | conversion candidate under review |
 
 Follow the [public roadmap](ROADMAP.md) and the pinned roadmap issue for current work.
 
 ## Foundation image
 
-Issue #1 establishes an unmodified Memtly `1.0.6` control image before conversion code is introduced. The build verifies the annotated Community tag, Community commit, Core gitlink, and checked-out Core commit, then applies the committed patch series with drift checks.
+Issue #1 established the merged Memtly `1.0.6` control image. The build verifies the annotated Community tag, Community commit, Core gitlink, and checked-out Core commit, then applies the committed patch series with drift checks.
 
 ```bash
 ./scripts/test-foundation.sh
-docker build --pull=false -t memtly-heic-converter:1.0.6-foundation .
+docker build --pull=false -t memtly-heic-converter:1.0.6-heic-candidate .
 ```
 
-See [build provenance](docs/build-provenance.md). A successful foundation build does **not** claim HEIC support.
+See [build provenance](docs/build-provenance.md) and [browser conversion](docs/browser-conversion.md). Conversion remains disabled at runtime unless explicitly enabled.
 
 ## Intended behavior
 
 ```text
 HEIC/HEIF selected
-  → detect by file content with MIME/extension hints
+  → detect from a bounded ISO-BMFF content scan
   → convert sequentially to JPEG in-browser
   → hand the new .jpg File to Memtly's existing upload path
   → Memtly retains its checksum, chunking, validation, review,
