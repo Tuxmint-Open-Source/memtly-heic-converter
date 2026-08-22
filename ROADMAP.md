@@ -6,7 +6,7 @@ This roadmap is directional and best-effort. It is not a delivery-date commitmen
 
 1. Use `v0.1.0-rc.1` as the first validated pre-release for controlled testing.
 2. Collect real-device Safari/iPhone/iPad validation before any production-ready claim.
-3. Monitor upstream Memtly drift and decide whether a scheduled drift watcher is needed.
+3. Keep the scheduled upstream drift monitor healthy and review any generated drift PRs before changing compatibility claims.
 
 ## Completed candidate gates
 
@@ -17,6 +17,7 @@ This roadmap is directional and best-effort. It is not a delivery-date commitmen
 - Review-relevant lifecycle behavior: chunking, duplicates, raw HEIC rejection, download, deletion, feature-disabled behavior, rollback/restore, and container recreation without volume deletion.
 - First validated pre-release image published to GHCR and validated by immutable digest.
 - Capture-date/EXIF preservation decision recorded: metadata copying and original HEIC archival storage are deferred for the browser-conversion release candidate.
+- Scheduled upstream drift detection added for pinned Memtly refs and watched patch-surface files.
 
 ## Later / decisions needed
 
