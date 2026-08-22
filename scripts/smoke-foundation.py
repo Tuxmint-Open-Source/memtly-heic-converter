@@ -123,8 +123,10 @@ def main() -> int:
 
     with opener.open(BASE_URL + "/Account", timeout=30) as response:
         account_html = response.read().decode(errors="replace")
-    request_token = token_from(account_html)
+    if "/Account/Login" in response.geturl() or "logout" not in account_html.lower():
+        raise RuntimeError("authenticated account page did not load")
 
+    request_token = login_token
     suffix = uuid.uuid4().hex[:12]
     gallery_name = "Foundation Smoke " + suffix
     identifier = "foundation-smoke-" + suffix
@@ -164,6 +166,11 @@ def main() -> int:
         if not row:
             raise RuntimeError("temporary gallery readback failed")
         gallery_id = int(row.group(1))
+
+        gallery_query = urllib.parse.urlencode({"identifier": identifier})
+        with opener.open(BASE_URL + "/Gallery?" + gallery_query, timeout=30) as response:
+            gallery_html = response.read().decode(errors="replace")
+        request_token = token_from(gallery_html)
 
         payload = generated_png()
         request_id = str(uuid.uuid4())
