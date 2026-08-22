@@ -159,13 +159,16 @@ def main() -> int:
         query = urllib.parse.urlencode({"term": gallery_name, "type": "0", "page": "1", "limit": "10"})
         with opener.open(BASE_URL + "/Account/GalleriesList?" + query, timeout=30) as response:
             galleries_html = response.read().decode(errors="replace")
-        row = re.search(
-            rf'<tr[^>]*data-gallery-id="(\d+)"[^>]*data-gallery-identifier="{re.escape(identifier)}"',
-            galleries_html,
-        )
-        if not row:
+        row_attrs: dict[str, str] | None = None
+        for row_html in re.findall(r'<tr[^>]*data-gallery-id="\d+"[^>]*>', galleries_html, re.I):
+            attrs = dict(re.findall(r'data-gallery-([\w-]+)="([^"]*)"', row_html, re.I))
+            if attrs.get("name") == gallery_name:
+                row_attrs = attrs
+                break
+        if row_attrs is None or not row_attrs.get("id") or not row_attrs.get("identifier"):
             raise RuntimeError("temporary gallery readback failed")
-        gallery_id = int(row.group(1))
+        gallery_id = int(row_attrs["id"])
+        identifier = row_attrs["identifier"]
 
         gallery_query = urllib.parse.urlencode({"identifier": identifier})
         with opener.open(BASE_URL + "/Gallery?" + gallery_query, timeout=30) as response:
