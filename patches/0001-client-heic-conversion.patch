@@ -93,7 +93,7 @@ index 7b8b021..33ce243 100644
      "jquery-loading": "^0.2.8",
      "jquery-qrcode": "^1.0.0",
 diff --git a/Memtly.Core/Memtly.Core/src/modules/upload-box/index.js b/Memtly.Core/Memtly.Core/src/modules/upload-box/index.js
-index 9a66ff4..7ea152d 100644
+index 9a66ff4..23949b5 100644
 --- a/Memtly.Core/Memtly.Core/src/modules/upload-box/index.js
 +++ b/Memtly.Core/Memtly.Core/src/modules/upload-box/index.js
 @@ -4,12 +4,15 @@ import { displayLoader, hideLoader } from '@modules/loader';
@@ -207,6 +207,15 @@ index 9a66ff4..7ea152d 100644
  
          const processFileUpload = async (requestId, fileIndex) => {
              if (fileIndex < dataRefs.files.length) {
+@@ -316,7 +375,7 @@ class UploadBox {
+         const processFileChunk = async (requestId, fileIndex, uploadId, chunkId, currentAttempt = 0) => {
+             const start = chunkId * this.chunk_size;
+             const end = Math.min(start + this.chunk_size, dataRefs.files[fileIndex].size);
+-            const chunk = dataRefs.files[fileIndex].slice(start, end);
++            const chunk = dataRefs.files[fileIndex].slice(start, end, dataRefs.files[fileIndex].type);
+             const totalChunks = Math.ceil(dataRefs.files[fileIndex].size / this.chunk_size);
+             const checksum = await getFileChecksum(dataRefs.files[fileIndex]);
+ 
 diff --git a/Memtly.Core/Memtly.Core/src/modules/utilities/heic.mjs b/Memtly.Core/Memtly.Core/src/modules/utilities/heic.mjs
 new file mode 100644
 index 0000000..98005aa
