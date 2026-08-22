@@ -40,6 +40,6 @@ The default policy receives that narrow worker allowance. This overlay does not 
 
 ## Product limits
 
-The JPEG derivative does not preserve the original HEIC bitstream, auxiliary images, Live Photo content, HDR depth, EXIF, XMP, GPS, or capture date. Only the first image returned from a multi-image HEIF container is used. JPEG encoding is lossy.
+The JPEG derivative does not preserve the original HEIC bitstream, auxiliary images, Live Photo content, HDR depth, EXIF, XMP, GPS, or capture date. The measured Chromium/heic2any path may include ICC profile data, but the overlay does not provide a general metadata-preservation feature. Only the first image returned from a multi-image HEIF container is used. JPEG encoding is lossy. See the [metadata decision](metadata-decision.md) for the measured behavior and rationale.
 
 The pixel bound is checked immediately after decode because this browser decoder does not expose dimensions before decoding. The source-byte bound protects the decoder input, but peak decode memory can still be substantially larger than the source file. Real-device Safari validation remains required before production readiness is claimed.

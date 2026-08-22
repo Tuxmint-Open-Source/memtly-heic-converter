@@ -27,7 +27,7 @@ Issue #1 established the merged Memtly `1.0.6` control image. The build verifies
 docker build --pull=false -t memtly-heic-converter:1.0.6-heic-candidate .
 ```
 
-See [build provenance](docs/build-provenance.md), [browser conversion](docs/browser-conversion.md), [fixture provenance](docs/fixture-provenance.md), [compatibility](docs/compatibility.md), the public-safe [candidate validation report](docs/validation-heic-candidate.md), and the [unchanged lifecycle validation report](docs/validation-lifecycle.md). Conversion remains disabled at runtime unless explicitly enabled.
+See [build provenance](docs/build-provenance.md), [browser conversion](docs/browser-conversion.md), [fixture provenance](docs/fixture-provenance.md), [compatibility](docs/compatibility.md), [metadata decision](docs/metadata-decision.md), the public-safe [candidate validation report](docs/validation-heic-candidate.md), and the [unchanged lifecycle validation report](docs/validation-lifecycle.md). Conversion remains disabled at runtime unless explicitly enabled.
 
 ## Intended behavior
 
@@ -50,7 +50,7 @@ The project aims to build from an exact upstream Memtly ref and apply a small, r
 
 - The JPEG is a derivative, not an archival HEIC original.
 - HEIF sequences, Live Photo auxiliaries, depth maps, and other auxiliary images may not be retained.
-- EXIF metadata and original capture time may be lost; this must be measured before release.
+- EXIF/XMP/GPS metadata and original capture time are not preserved by the `v0.1.0-rc.1` browser-conversion path.
 - Browser conversion can be memory-intensive on mobile devices, so conversion will be sequential and bounded.
 - HEVC/HEIC codec patents may matter in some jurisdictions. Open-source licensing is not a patent opinion.
 

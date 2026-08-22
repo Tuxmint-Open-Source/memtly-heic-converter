@@ -4,9 +4,9 @@ This roadmap is directional and best-effort. It is not a delivery-date commitmen
 
 ## Now
 
-1. Prepare the first pre-release publication path for `v0.1.0-rc.1`.
-2. Review and merge release metadata, release notes, and the GHCR publication workflow.
-3. After maintainer approval, create the immutable release tag and GitHub pre-release to publish the image.
+1. Use `v0.1.0-rc.1` as the first validated pre-release for controlled testing.
+2. Collect real-device Safari/iPhone/iPad validation before any production-ready claim.
+3. Monitor upstream Memtly drift and decide whether a scheduled drift watcher is needed.
 
 ## Completed candidate gates
 
@@ -15,10 +15,12 @@ This roadmap is directional and best-effort. It is not a delivery-date commitmen
 - Licensed fixture-driven unit and browser tests.
 - Unchanged JPEG, PNG, MP4, and MOV behavior through the existing upload path.
 - Review-relevant lifecycle behavior: chunking, duplicates, raw HEIC rejection, download, deletion, feature-disabled behavior, rollback/restore, and container recreation without volume deletion.
+- First validated pre-release image published to GHCR and validated by immutable digest.
+- Capture-date/EXIF preservation decision recorded: metadata copying and original HEIC archival storage are deferred for the browser-conversion release candidate.
 
 ## Later / decisions needed
 
-- Determine whether capture-date/EXIF preservation is sufficient.
+- Revisit capture-date/EXIF preservation only if it becomes a product requirement with explicit privacy controls and licensed fixtures.
 - Evaluate an integrated server-side conversion mode only if metadata preservation is a firm requirement.
 - Decide whether preserving archival HEIC originals is worth a dual-asset lifecycle.
 - Add scheduled upstream drift detection for patched files.

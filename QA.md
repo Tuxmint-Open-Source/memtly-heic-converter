@@ -19,7 +19,7 @@ A change is not complete until applicable gates pass.
 - Malformed HEIC fails before network upload.
 - Mixed selections continue after a per-file conversion failure according to documented UX.
 - Conversion is sequential and respects size/pixel limits.
-- JPEG quality, dimensions, orientation, color behavior, and metadata loss are measured.
+- JPEG quality, dimensions, orientation, color behavior, and metadata loss are measured or explicitly documented as unclaimed limitations.
 
 ## Regression behavior
 
