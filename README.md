@@ -7,15 +7,16 @@ A feature-flagged build overlay for converting HEIC/HEIF still images to JPEG **
 
 ## Status
 
-**Feature-flagged browser conversion candidate under review. Not ready for production.**
+**Feature-flagged browser conversion candidate with release preparation under review. Not ready for production.**
 
 The first compatibility target is:
 
 | Extension line | Memtly Community | Upstream commit | Status |
 | --- | --- | --- | --- |
-| `main` | `1.0.6` | `d9b7298866c8cafbd515a6bf5e260e1d0423f262` | conversion candidate under review |
+| `v0.1.0-rc.1` | `1.0.6` | `d9b7298866c8cafbd515a6bf5e260e1d0423f262` | pending pre-release tag/image publication |
+| `main` | `1.0.6` | `d9b7298866c8cafbd515a6bf5e260e1d0423f262` | validated candidate source line |
 
-Follow the [public roadmap](ROADMAP.md) and the pinned roadmap issue for current work.
+Follow the [public roadmap](ROADMAP.md), [compatibility matrix](docs/compatibility.md), and pinned roadmap issue for current work.
 
 ## Foundation image
 
@@ -26,7 +27,7 @@ Issue #1 established the merged Memtly `1.0.6` control image. The build verifies
 docker build --pull=false -t memtly-heic-converter:1.0.6-heic-candidate .
 ```
 
-See [build provenance](docs/build-provenance.md), [browser conversion](docs/browser-conversion.md), [fixture provenance](docs/fixture-provenance.md), the public-safe [candidate validation report](docs/validation-heic-candidate.md), and the [unchanged lifecycle validation report](docs/validation-lifecycle.md). Conversion remains disabled at runtime unless explicitly enabled.
+See [build provenance](docs/build-provenance.md), [browser conversion](docs/browser-conversion.md), [fixture provenance](docs/fixture-provenance.md), [compatibility](docs/compatibility.md), the public-safe [candidate validation report](docs/validation-heic-candidate.md), and the [unchanged lifecycle validation report](docs/validation-lifecycle.md). Conversion remains disabled at runtime unless explicitly enabled.
 
 ## Intended behavior
 

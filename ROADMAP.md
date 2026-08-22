@@ -4,15 +4,17 @@ This roadmap is directional and best-effort. It is not a delivery-date commitmen
 
 ## Now
 
-1. Establish a reproducible custom-image overlay against exact Memtly `1.0.6`.
-2. Add feature-flagged HEIC/HEIF detection and sequential browser conversion.
-3. Add licensed fixture-driven unit and browser tests.
+1. Prepare the first pre-release publication path for `v0.1.0-rc.1`.
+2. Review and merge release metadata, release notes, and the GHCR publication workflow.
+3. After maintainer approval, create the immutable release tag and GitHub pre-release to publish the image.
 
-## Next
+## Completed candidate gates
 
-4. Prove unchanged JPEG, PNG, MP4, and MOV behavior through the existing upload path.
-5. Validate review, thumbnails, full view, slideshow, download, duplicate handling, deletion, backup, recreation, and image rollback.
-6. Publish a first pre-release with an explicit compatibility result.
+- Reproducible custom-image overlay against exact Memtly `1.0.6`.
+- Feature-flagged HEIC/HEIF detection and sequential browser conversion.
+- Licensed fixture-driven unit and browser tests.
+- Unchanged JPEG, PNG, MP4, and MOV behavior through the existing upload path.
+- Review-relevant lifecycle behavior: chunking, duplicates, raw HEIC rejection, download, deletion, feature-disabled behavior, rollback/restore, and container recreation without volume deletion.
 
 ## Later / decisions needed
 
