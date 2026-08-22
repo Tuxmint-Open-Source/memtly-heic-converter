@@ -1,0 +1,109 @@
+{
+  "description": "Public-safe upstream drift baseline for the Memtly HEIC Converter patch surface. A drift alert is a review prompt, not a compatibility claim.",
+  "schema": 1,
+  "upstreams": {
+    "community": {
+      "commit": "d9b7298866c8cafbd515a6bf5e260e1d0423f262",
+      "default_branch": "master",
+      "observed_default_branch_head": "4ad9d6b7175df87ec6d49ee36e584ee57bacc7ad",
+      "observed_latest_tag": "1.0.6",
+      "repo": "https://github.com/Memtly/Memtly.Community.git",
+      "tag": "1.0.6",
+      "tag_object": "5a43747c41c1405128ca4ea6448a9b9260f1e2d3"
+    },
+    "core": {
+      "commit": "cc8c88d625136f04ae1f1063fc635f74e739bd72",
+      "default_branch": "master",
+      "observed_default_branch_head": "cc8c88d625136f04ae1f1063fc635f74e739bd72",
+      "repo": "https://github.com/Memtly/Memtly.Core.git"
+    }
+  },
+  "watched_files": [
+    {
+      "git_object": "gitlink",
+      "git_oid": "cc8c88d625136f04ae1f1063fc635f74e739bd72",
+      "path": "Memtly.Core",
+      "repo": "community"
+    },
+    {
+      "bytes": 16986,
+      "git_object": "blob",
+      "git_oid": "bf6eef028e509ebf23f561253c8de28e37454ffb",
+      "path": "Memtly.Core/Constants/MemtlyConfiguration.cs",
+      "repo": "core",
+      "sha256": "8621874eeb427d27c7d4ca0e47d4e7a9ef1f58a69e1612e25ac4950db1fff6bb"
+    },
+    {
+      "bytes": 9575,
+      "git_object": "blob",
+      "git_oid": "33f1f437f7aafed6870420e6ef4c426b5e7a6bde",
+      "path": "Memtly.Core/Extensions/StartupExtensions.cs",
+      "repo": "core",
+      "sha256": "38049182710cbd2a75f068e69d7ead27017c7a56377b971874f5d31b6c1d3f09"
+    },
+    {
+      "bytes": 6309,
+      "git_object": "blob",
+      "git_oid": "b1a07eddbc4765dae87d6653736339d9702230d6",
+      "path": "Memtly.Core/Views/Gallery/Index.cshtml",
+      "repo": "core",
+      "sha256": "130bbebd4da2bb909748c3eebab4f40ead4cb5eff497cded39c2f6d5fd910f25"
+    },
+    {
+      "bytes": 1059,
+      "git_object": "blob",
+      "git_oid": "7b8b021d2da983c748e75f52eecb4c9997450ad8",
+      "path": "Memtly.Core/package.json",
+      "repo": "core",
+      "sha256": "328f08ffd637712e1231807d0d747b0b4406fc98a0aa99b83fefa42430cc313a"
+    },
+    {
+      "bytes": 158957,
+      "git_object": "blob",
+      "git_oid": "ba7cfa9c97df63329eb8980bf4e9bbc916887ec4",
+      "path": "Memtly.Core/package-lock.json",
+      "repo": "core",
+      "sha256": "b552e3d5ce75f9b9d28324793c383ee63de75288c9adc545b18cd4108e282710"
+    },
+    {
+      "bytes": 18503,
+      "git_object": "blob",
+      "git_oid": "9a66ff418731d33e1faca4a449f7ffe0526f0318",
+      "path": "Memtly.Core/src/modules/upload-box/index.js",
+      "repo": "core",
+      "sha256": "8a1cc77ccd349a143bd6990707ee0a09fb1343d8876f8930648ac11f7d4aa9d9"
+    },
+    {
+      "bytes": 310,
+      "git_object": "blob",
+      "git_oid": "fc1a9245b99534c3c4eee11902f51984a6ac3120",
+      "path": "Memtly.Core/src/modules/utilities/files.js",
+      "repo": "core",
+      "sha256": "bec2f7dd7bea90619aa13d349d458db6ad909ca574da58a8841e562a29440a0a"
+    },
+    {
+      "bytes": 62017,
+      "git_object": "blob",
+      "git_oid": "02708d98b02ce7ec6d359eaf398c2a8bcf8dd2e1",
+      "path": "Memtly.Core/Controllers/GalleryController.cs",
+      "repo": "core",
+      "sha256": "f2ac8eadb96fcabfd7e699c0802f9d638327afe4061b45720561bf372efcf27f"
+    },
+    {
+      "bytes": 14162,
+      "git_object": "blob",
+      "git_oid": "67fe5fe9405ce9942f0c682292c190a60ee9e66c",
+      "path": "Memtly.Core/Helpers/ImageHelper.cs",
+      "repo": "core",
+      "sha256": "a1d578232d4df80f8566c39de07d3f10862b971a12687f1bd2c822be52c14f6c"
+    },
+    {
+      "bytes": 1943,
+      "git_object": "blob",
+      "git_oid": "7c9b86a3559b9f10c028acd4956b758f51a35b38",
+      "path": "Memtly.Core/Models/Database/GalleryItemModel.cs",
+      "repo": "core",
+      "sha256": "d46c6e6a70d4618d41da434764e66f661f175fec2af69992d31d054f57566f2b"
+    }
+  ]
+}

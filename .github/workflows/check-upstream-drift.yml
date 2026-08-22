@@ -1,0 +1,85 @@
+name: Check upstream drift
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 5 * * 1'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: upstream-drift-review
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Check upstream drift
+        id: drift
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/check-upstream-drift.py --write
+          if ! git diff --quiet -- .upstream/memtly.lock.json .upstream/memtly-drift-report.md; then
+            echo "drift=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "drift=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create upstream drift review PR
+        id: create-pr
+        if: steps.drift.outputs.drift == 'true'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1
+        with:
+          branch: automation/upstream-memtly-drift-review
+          delete-branch: false
+          commit-message: 'chore: record upstream Memtly drift'
+          title: 'Review upstream Memtly drift'
+          body: |
+            ## Summary
+
+            Upstream Memtly public Git metadata or watched patch-surface hashes changed.
+
+            This automated PR updates the public-safe drift baseline and report. It is a review prompt, not a compatibility claim.
+
+            ## Review
+
+            - Read `.upstream/memtly-drift-report.md`.
+            - Decide whether upstream changes affect the converter overlay patch surface.
+            - If a new Memtly release is targeted, validate that exact release/artifact before changing compatibility claims.
+            - Keep environment-specific validation details and raw runtime evidence private.
+
+            ## Validation
+
+            ```sh
+            python3 scripts/check-upstream-drift.py --check
+            ```
+          labels: 'type: chore'
+          add-paths: |
+            .upstream/memtly.lock.json
+            .upstream/memtly-drift-report.md
+
+      - name: Verify drift PR was created or updated
+        if: steps.drift.outputs.drift == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${{ steps.create-pr.outputs.pull-request-number }}" ]; then
+            echo "Drift was detected, but create-pull-request did not report a PR number." >> "$GITHUB_STEP_SUMMARY"
+            echo "Check branch automation/upstream-memtly-drift-review manually." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          echo "Upstream drift review PR #${{ steps.create-pr.outputs.pull-request-number }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Report no drift
+        if: steps.drift.outputs.drift != 'true'
+        shell: bash
+        run: echo "No upstream Memtly drift detected." >> "$GITHUB_STEP_SUMMARY"

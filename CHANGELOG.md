@@ -12,6 +12,7 @@ All notable changes to this project are documented here. This project follows se
 - Licensed public HEIC/HEIF fixtures and browser regression tests.
 - Public-safe validation reports for the conversion candidate and unchanged Memtly media lifecycle.
 - Release workflow for publishing pre-release images to GitHub Container Registry.
+- Public upstream drift monitor for the pinned Memtly refs and watched patch-surface files.
 
 ### Validated
 
