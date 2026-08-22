@@ -16,6 +16,28 @@ test('valid HEIC fixture is converted before Memtly upload and malformed HEIC fa
   await expect(page.locator('input.upload-input')).toHaveAttribute('accept', /\.heic/);
 
   await page.evaluate(() => {
+    function jpegSegments(buffer) {
+      const bytes = new Uint8Array(buffer);
+      const segments = [];
+      if (bytes.length < 4 || bytes[0] !== 0xff || bytes[1] !== 0xd8) return segments;
+      let offset = 2;
+      while (offset + 3 < bytes.length) {
+        if (bytes[offset] !== 0xff) break;
+        while (bytes[offset] === 0xff) offset += 1;
+        const marker = bytes[offset++];
+        if (marker === 0xd9 || marker === 0xda) break;
+        if (offset + 1 >= bytes.length) break;
+        const length = (bytes[offset] << 8) | bytes[offset + 1];
+        if (length < 2 || offset + length > bytes.length) break;
+        const payloadStart = offset + 2;
+        const payloadEnd = offset + length;
+        const prefix = String.fromCharCode(...bytes.slice(payloadStart, Math.min(payloadStart + 12, payloadEnd)));
+        segments.push({ marker: `ff${marker.toString(16).padStart(2, '0')}`, prefix });
+        offset += length;
+      }
+      return segments;
+    }
+
     window.__memtlyUploadProbe = { requests: [], errors: [] };
     const originalOpen = XMLHttpRequest.prototype.open;
     const originalSend = XMLHttpRequest.prototype.send;
@@ -35,14 +57,20 @@ test('valid HEIC fixture is converted before Memtly upload and malformed HEIC fa
                 name: value.name || '',
                 type: value.type || '',
                 size: value.size,
-                magicPromise: value.slice(0, 4).arrayBuffer().then(buffer => Array.from(new Uint8Array(buffer)).map(byte => byte.toString(16).padStart(2, '0')).join(''))
+                magicPromise: value.slice(0, 64 * 1024).arrayBuffer().then(buffer => {
+                  const bytes = Array.from(new Uint8Array(buffer));
+                  return {
+                    magic: bytes.slice(0, 4).map(byte => byte.toString(16).padStart(2, '0')).join(''),
+                    jpegSegments: jpegSegments(buffer)
+                  };
+                })
               });
             } else {
               entry.fields[key] = String(value);
             }
           }
         }
-        Promise.all(entry.files.map(file => file.magicPromise.then(magic => { file.magic = magic; delete file.magicPromise; }))).then(() => {
+        Promise.all(entry.files.map(file => file.magicPromise.then(result => { file.magic = result.magic; file.jpegSegments = result.jpegSegments; delete file.magicPromise; }))).then(() => {
           window.__memtlyUploadProbe.requests.push(entry);
         }).catch(error => window.__memtlyUploadProbe.errors.push(String(error)));
       }
@@ -70,6 +98,10 @@ test('valid HEIC fixture is converted before Memtly upload and malformed HEIC fa
   expect(converted).toBeTruthy();
   expect(converted.type).toBe('image/jpeg');
   expect(converted.magic).toMatch(/^ffd8ff/);
+  const hasExifOrXmp = converted.jpegSegments.some(segment => segment.marker === 'ffe1' && (segment.prefix.startsWith('Exif') || segment.prefix.startsWith('http://ns.adobe.com/xap')));
+  const hasIccProfile = converted.jpegSegments.some(segment => segment.marker === 'ffe2' && segment.prefix.startsWith('ICC_PROFILE'));
+  expect(hasExifOrXmp).toBe(false);
+  expect(typeof hasIccProfile).toBe('boolean');
 
   expect(ordinary).toBeTruthy();
   expect(ordinary.type).toBe('image/png');

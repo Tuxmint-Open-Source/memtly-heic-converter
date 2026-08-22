@@ -18,11 +18,11 @@ All notable changes to this project are documented here. This project follows se
 - Memtly Community `1.0.6` at commit `d9b7298866c8cafbd515a6bf5e260e1d0423f262`.
 - Memtly Core gitlink `cc8c88d625136f04ae1f1063fc635f74e739bd72`.
 - `heic2any` `0.0.4` at commit `3428539e643e112323a5b8a2c77c6402cb1372f6`.
-- Browser conversion path, malformed HEIC fail-closed behavior, ordinary media lifecycle, feature-disabled mode, rollback/restore, and container recreation without volume deletion.
+- Browser conversion path, malformed HEIC fail-closed behavior, ordinary media lifecycle, feature-disabled mode, rollback/restore, container recreation without volume deletion, and exact published-image digest `sha256:b6f9a70b78c134e01abf64325822c08f84568dde185ce13a7b419bb599b4c6ba`.
 
 ### Known limitations
 
 - This is a pre-release candidate, not a production-ready stable release.
 - Real iPhone/iPad Safari validation remains outstanding.
 - Converted JPEG files do not preserve the original HEIC bitstream.
-- EXIF/XMP metadata, original capture time, Live Photo auxiliaries, depth maps, and multi-image HEIF content are not preserved by this browser-conversion slice.
+- EXIF/XMP/GPS metadata and original capture time are not preserved by this browser-conversion slice; runtime browser testing confirms no EXIF/XMP marker in the converted upload, while ICC profile data may be present depending on browser/converter behavior.
