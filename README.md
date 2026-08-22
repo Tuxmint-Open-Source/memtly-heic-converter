@@ -7,13 +7,13 @@ A feature-flagged build overlay for converting HEIC/HEIF still images to JPEG **
 
 ## Status
 
-**Feature-flagged browser conversion candidate with release preparation under review. Not ready for production.**
+**Feature-flagged browser conversion pre-release. Not ready for production.**
 
 The first compatibility target is:
 
 | Extension line | Memtly Community | Upstream commit | Status |
 | --- | --- | --- | --- |
-| `v0.1.0-rc.1` | `1.0.6` | `d9b7298866c8cafbd515a6bf5e260e1d0423f262` | pending pre-release tag/image publication |
+| `v0.1.0-rc.1` | `1.0.6` | `d9b7298866c8cafbd515a6bf5e260e1d0423f262` | validated compatible pre-release |
 | `main` | `1.0.6` | `d9b7298866c8cafbd515a6bf5e260e1d0423f262` | validated candidate source line |
 
 Follow the [public roadmap](ROADMAP.md), [compatibility matrix](docs/compatibility.md), and pinned roadmap issue for current work.
