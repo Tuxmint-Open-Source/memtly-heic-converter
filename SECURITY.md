@@ -6,7 +6,7 @@ Use GitHub's private vulnerability reporting for this repository when enabled. I
 
 ## Supported versions
 
-No production release is supported yet.
+No stable production release is supported yet. Pre-release candidates may be published for validation and should be treated as test artifacts unless the release notes say otherwise.
 
 ## Scope reminders
 
