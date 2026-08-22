@@ -18,7 +18,8 @@ done
 grep -Fq 'git cat-file -t "refs/tags/${MEMTLY_COMMUNITY_TAG}"' Dockerfile
 grep -Fq 'git ls-tree HEAD Memtly.Core' Dockerfile
 grep -Fq 'git apply --check' Dockerfile
-grep -Fq 'test -s /app/publish/wwwroot/dist/manifest.json' Dockerfile
+grep -Fq 'test -s /app/publish/wwwroot/_content/Memtly.Core/dist/manifest.json' Dockerfile
+grep -Fq "Memtly.Core.wwwroot.dist.manifest.json" Dockerfile
 grep -Fq 'io.tuxmint.memtly.heic.enabled="false"' Dockerfile
 
 test -f patches/series

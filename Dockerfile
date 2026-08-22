@@ -48,7 +48,8 @@ RUN dotnet publish ./Memtly.Community.csproj \
       -c "${BUILD_CONFIGURATION}" \
       -o /app/publish \
       /p:UseAppHost=false
-RUN test -s /app/publish/wwwroot/dist/manifest.json
+RUN test -s /app/publish/wwwroot/_content/Memtly.Core/dist/manifest.json && \
+    node -e "const fs=require('fs'); const dll=fs.readFileSync('/app/publish/Memtly.Core.dll'); if (!dll.includes(Buffer.from('Memtly.Core.wwwroot.dist.manifest.json'))) process.exit(1)"
 
 FROM ${RUNTIME_IMAGE} AS final
 ARG MEMTLY_COMMUNITY_COMMIT=d9b7298866c8cafbd515a6bf5e260e1d0423f262
