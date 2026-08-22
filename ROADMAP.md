@@ -24,7 +24,6 @@ This roadmap is directional and best-effort. It is not a delivery-date commitmen
 - Revisit capture-date/EXIF preservation only if it becomes a product requirement with explicit privacy controls and licensed fixtures.
 - Evaluate an integrated server-side conversion mode only if metadata preservation is a firm requirement.
 - Decide whether preserving archival HEIC originals is worth a dual-asset lifecycle.
-- Add scheduled upstream drift detection for patched files.
 
 ## Non-goals for the first release
 
