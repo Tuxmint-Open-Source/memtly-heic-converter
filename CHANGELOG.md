@@ -23,6 +23,7 @@ All notable changes to this project are documented here. This project follows se
 - Verified ShellCheck `0.11.0` coverage for every tracked shell program, with checksum-before-extraction acquisition and deterministic workflow tests.
 - Verified actionlint `1.7.12` semantic validation for every tracked GitHub Actions workflow, with checksum-before-extraction acquisition and deterministic workflow tests.
 - Verified hadolint `2.15.1` coverage for every tracked Dockerfile, with checksum-before-execution acquisition, deterministic tests, and remediation of measured directory-switch and pipeline findings.
+- Verified Ruff `0.16.4` coverage for every tracked Python program, with checksum-before-extraction acquisition, deterministic tests, and remediation of measured core lint findings.
 
 ### Validated
 

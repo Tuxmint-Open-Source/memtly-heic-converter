@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Self-cleaning Memtly media lifecycle regression smoke test.
 
 Exercises ordinary supported media through Memtly's real HTTP endpoints without
@@ -32,8 +31,8 @@ import urllib.request
 import uuid
 import zipfile
 import zlib
-from dataclasses import dataclass
 from collections.abc import Iterator
+from dataclasses import dataclass
 from pathlib import Path
 
 BASE_URL = os.environ.get("MEMTLY_SMOKE_BASE_URL", "").rstrip("/")

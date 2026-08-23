@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Regression tests for verified ShellCheck acquisition and inventory."""
 
 from __future__ import annotations

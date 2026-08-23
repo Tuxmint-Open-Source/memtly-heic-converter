@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Check public upstream drift for the pinned Memtly patch surface.
 
 The checker compares the committed baseline with public upstream Git refs and
@@ -10,12 +9,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
-from pathlib import Path
-import shutil
 import subprocess
-import sys
 import tempfile
+from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]

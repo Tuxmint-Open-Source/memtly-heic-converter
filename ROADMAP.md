@@ -27,6 +27,7 @@ This roadmap is directional and best-effort. It is not a delivery-date commitmen
 - Checksum-verified ShellCheck `0.11.0` scans the complete tracked shell-program inventory at style severity.
 - Checksum-verified actionlint `1.7.12` semantically validates the complete tracked GitHub Actions workflow inventory.
 - Checksum-verified hadolint `2.15.1` validates the complete tracked Dockerfile inventory; the measured directory-switch and pipefail findings are remediated.
+- Checksum-verified Ruff `0.16.4` validates the complete tracked Python inventory with an explicit low-noise core rule set.
 
 ## Later / decisions needed
 
