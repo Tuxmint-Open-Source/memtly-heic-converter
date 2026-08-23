@@ -34,7 +34,7 @@ Public reports may name browser/device classes and release versions, but must no
 | Current iPad Safari | Yes | iPadOS can differ in file picker and memory behavior. |
 | macOS Safari | Recommended | Useful additional WebKit signal; not a substitute for iPhone/iPad. |
 | Android Chrome | Recommended | Confirms non-Apple behavior remains normal. |
-| Desktop Chromium/Firefox | Already automated / recommended | Useful regression coverage, not Apple hardware evidence. |
+| Desktop Chromium/Firefox/WebKit | Automated | Useful regression coverage, not Apple hardware evidence. |
 
 ## Test media policy
 

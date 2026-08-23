@@ -9,11 +9,31 @@ const validFixturePath = process.env.MEMTLY_BROWSER_HEIC_FIXTURE || 'tests/fixtu
 test.skip(!baseURL || !galleryIdentifier, 'Set MEMTLY_BROWSER_BASE_URL and MEMTLY_BROWSER_GALLERY_IDENTIFIER for runtime browser tests');
 
 test('valid HEIC fixture is converted before Memtly upload and malformed HEIC fails closed', async ({ page }) => {
-  await page.goto(`${baseURL.replace(/\/$/, '')}/Gallery?identifier=${encodeURIComponent(galleryIdentifier)}`);
+  const browserDiagnostics = [];
+  page.on('pageerror', error => browserDiagnostics.push(`pageerror: ${error.message}`));
+  page.on('console', message => {
+    if (message.type() === 'error' || message.type() === 'warning') {
+      browserDiagnostics.push(`${message.type()}: ${message.text()}`);
+    }
+  });
+
+  const normalizedBaseURL = baseURL.replace(/\/$/, '');
+  await page.context().addCookies([{
+    name: '.AspNetCore.Culture',
+    value: 'c%3Den-GB%7Cuic%3Den-GB',
+    url: normalizedBaseURL
+  }]);
+  await page.goto(`${normalizedBaseURL}/Gallery?identifier=${encodeURIComponent(galleryIdentifier)}`);
 
   const form = page.locator('form.file-uploader-form');
   await expect(form).toHaveAttribute('data-client-heic-conversion', 'true');
   await expect(page.locator('input.upload-input')).toHaveAttribute('accept', /\.heic/);
+
+  const stayAnonymous = page.getByRole('button', { name: /Don't Tell Us/i });
+  if (await stayAnonymous.isVisible().catch(() => false)) {
+    await stayAnonymous.click();
+  }
+  await expect(form).toHaveAttribute('data-identity-required', 'false');
 
   await page.evaluate(() => {
     function jpegSegments(buffer) {
@@ -89,7 +109,12 @@ test('valid HEIC fixture is converted before Memtly upload and malformed HEIC fa
     { name: 'malformed.heic', mimeType: 'image/heic', buffer: malformed }
   ]);
 
-  await expect.poll(async () => page.evaluate(() => window.__memtlyUploadProbe.requests.filter(request => request.url.includes('/Gallery/UploadFileChunk')).length), { timeout: 30000 }).toBe(2);
+  try {
+    await expect.poll(async () => page.evaluate(() => window.__memtlyUploadProbe.requests.filter(request => request.url.includes('/Gallery/UploadFileChunk')).length), { timeout: 30000 }).toBe(2);
+  } catch (error) {
+    const diagnostics = browserDiagnostics.length ? browserDiagnostics.join('\n') : 'none captured';
+    throw new Error(`${error.message}\nBrowser diagnostics:\n${diagnostics}`);
+  }
   const probe = await page.evaluate(() => window.__memtlyUploadProbe);
   const uploadedFiles = probe.requests.flatMap(request => request.files).filter(candidate => candidate.field === 'File');
   const converted = uploadedFiles.find(candidate => candidate.name.toLowerCase().endsWith('.jpg'));
