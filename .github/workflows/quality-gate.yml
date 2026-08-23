@@ -48,6 +48,12 @@ jobs:
       - name: Verify community intake files
         run: ./scripts/check-community-files.py
 
+      - name: Verify Dependabot maintenance config
+        run: ./scripts/check-dependabot-config.py
+
+      - name: Verify immutable GitHub Action pins
+        run: ./scripts/check-workflow-actions.py
+
       - name: Verify committed upstream baseline
         run: python3 scripts/check-upstream-drift.py --check
 

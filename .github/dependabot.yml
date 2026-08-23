@@ -1,0 +1,37 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:37"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 3
+    labels:
+      - "type: chore"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      npm-development:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:47"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 3
+    labels:
+      - "type: chore"
+    commit-message:
+      prefix: "chore(actions)"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
