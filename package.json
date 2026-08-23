@@ -6,6 +6,9 @@
     "test:browser": "playwright test tests/browser/heic-upload.spec.mjs"
   },
   "devDependencies": {
-    "@playwright/test": "1.62.1"
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.62.1",
+    "eslint": "10.9.0",
+    "globals": "17.11.0"
   }
 }
