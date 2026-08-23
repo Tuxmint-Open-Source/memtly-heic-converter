@@ -48,6 +48,9 @@ jobs:
       - name: Verify community intake files
         run: ./scripts/check-community-files.py
 
+      - name: Verify repository security policy
+        run: ./scripts/check-security-policy.py
+
       - name: Verify Dependabot maintenance config
         run: ./scripts/check-dependabot-config.py
 
