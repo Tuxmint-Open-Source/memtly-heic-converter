@@ -10,15 +10,15 @@ ARG MEMTLY_COMMUNITY_TAG=1.0.6
 ARG MEMTLY_COMMUNITY_COMMIT=d9b7298866c8cafbd515a6bf5e260e1d0423f262
 ARG MEMTLY_CORE_COMMIT=cc8c88d625136f04ae1f1063fc635f74e739bd72
 COPY patches /overlay/patches
+WORKDIR /src
 RUN set -eux; \
-    git clone --filter=blob:none --no-checkout https://github.com/Memtly/Memtly.Community.git /src; \
-    cd /src; \
+    git clone --filter=blob:none --no-checkout https://github.com/Memtly/Memtly.Community.git .; \
     git fetch --depth 1 origin "refs/tags/${MEMTLY_COMMUNITY_TAG}:refs/tags/${MEMTLY_COMMUNITY_TAG}"; \
     test "$(git cat-file -t "refs/tags/${MEMTLY_COMMUNITY_TAG}")" = tag; \
     test "$(git rev-parse "refs/tags/${MEMTLY_COMMUNITY_TAG}^{commit}")" = "${MEMTLY_COMMUNITY_COMMIT}"; \
     git checkout --detach "${MEMTLY_COMMUNITY_COMMIT}"; \
     test "$(git rev-parse HEAD)" = "${MEMTLY_COMMUNITY_COMMIT}"; \
-    test "$(git ls-tree HEAD Memtly.Core | awk '{print $3}')" = "${MEMTLY_CORE_COMMIT}"; \
+    test "$(git ls-tree --format='%(objectname)' HEAD Memtly.Core)" = "${MEMTLY_CORE_COMMIT}"; \
     git submodule update --init --depth 1 Memtly.Core; \
     test "$(git -C Memtly.Core rev-parse HEAD)" = "${MEMTLY_CORE_COMMIT}"; \
     while IFS= read -r patch; do \
@@ -37,7 +37,10 @@ COPY --from=node /usr/local /usr/local
 WORKDIR /src
 COPY --from=source /src .
 RUN node --test ./Memtly.Core/tests/heic-classifier.test.mjs
-RUN test "$(node --version)" = "v22.23.2" && test "$(npm --version | cut -d. -f1)" -ge 10
+RUN npm_version="$(npm --version)" && \
+    npm_major="${npm_version%%.*}" && \
+    test "$(node --version)" = "v22.23.2" && \
+    test "${npm_major}" -ge 10
 RUN dotnet restore -a "${TARGETARCH}" ./Memtly.Community/Memtly.Community.csproj
 WORKDIR /src/Memtly.Community
 RUN dotnet build ./Memtly.Community.csproj \

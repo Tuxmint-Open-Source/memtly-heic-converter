@@ -66,6 +66,12 @@ jobs:
       - name: Verify actionlint workflow contract
         run: ./scripts/check-actionlint-workflow.py
 
+      - name: Test verified hadolint acquisition and inventory
+        run: python3 tests/scripts/test-run-hadolint.py
+
+      - name: Verify hadolint workflow contract
+        run: ./scripts/check-hadolint-workflow.py
+
       - name: Verify Dependabot maintenance config
         run: ./scripts/check-dependabot-config.py
 

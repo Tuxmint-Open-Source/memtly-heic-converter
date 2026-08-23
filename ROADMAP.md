@@ -26,6 +26,7 @@ This roadmap is directional and best-effort. It is not a delivery-date commitmen
 - CodeQL scans repository-owned JavaScript/TypeScript, Python, and GitHub Actions; patch-text and runtime media behavior remain covered by the dedicated project gates.
 - Checksum-verified ShellCheck `0.11.0` scans the complete tracked shell-program inventory at style severity.
 - Checksum-verified actionlint `1.7.12` semantically validates the complete tracked GitHub Actions workflow inventory.
+- Checksum-verified hadolint `2.15.1` validates the complete tracked Dockerfile inventory; the measured directory-switch and pipefail findings are remediated.
 
 ## Later / decisions needed
 
