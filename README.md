@@ -30,6 +30,7 @@ npm ci
 npm run test:browser
 npm audit
 ./scripts/check-public-safety.py
+./scripts/check-community-files.py
 python3 scripts/check-upstream-drift.py --check
 ./scripts/check-patch-apply.sh
 ```
