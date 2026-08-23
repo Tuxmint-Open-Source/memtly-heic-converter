@@ -60,6 +60,12 @@ jobs:
       - name: Verify ShellCheck workflow contract
         run: ./scripts/check-shellcheck-workflow.py
 
+      - name: Test verified actionlint acquisition and inventory
+        run: python3 tests/scripts/test-run-actionlint.py
+
+      - name: Verify actionlint workflow contract
+        run: ./scripts/check-actionlint-workflow.py
+
       - name: Verify Dependabot maintenance config
         run: ./scripts/check-dependabot-config.py
 

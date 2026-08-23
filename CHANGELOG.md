@@ -21,6 +21,7 @@ All notable changes to this project are documented here. This project follows se
 - Explicit CodeQL scanning for repository-owned JavaScript/TypeScript, Python, and GitHub Actions, with a deterministic workflow contract in the required quality gate.
 - Lifecycle recreation validation no longer persists the generated temporary gallery access secret and now enforces owner-only, symlink-safe runtime state handling.
 - Verified ShellCheck `0.11.0` coverage for every tracked shell program, with checksum-before-extraction acquisition and deterministic workflow tests.
+- Verified actionlint `1.7.12` semantic validation for every tracked GitHub Actions workflow, with checksum-before-extraction acquisition and deterministic workflow tests.
 
 ### Validated
 
