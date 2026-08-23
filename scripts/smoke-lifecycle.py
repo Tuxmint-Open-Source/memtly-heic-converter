@@ -21,6 +21,7 @@ import json
 import os
 import re
 import shutil
+import stat
 import struct
 import subprocess
 import sys
@@ -44,6 +45,7 @@ KEEP_GALLERY = os.environ.get("MEMTLY_SMOKE_KEEP_GALLERY", "").lower() in {"1", 
 EXISTING_GALLERY_ID = os.environ.get("MEMTLY_SMOKE_EXISTING_GALLERY_ID", "")
 EXISTING_GALLERY_IDENTIFIER = os.environ.get("MEMTLY_SMOKE_EXISTING_GALLERY_IDENTIFIER", "")
 EXISTING_GALLERY_SECRET_KEY = os.environ.get("MEMTLY_SMOKE_EXISTING_GALLERY_SECRET_KEY", "")
+NEW_GALLERY_SECRET_KEY = os.environ.get("MEMTLY_SMOKE_NEW_GALLERY_SECRET_KEY", "")
 STATE_FILE = os.environ.get("MEMTLY_SMOKE_STATE_FILE", "")
 CHUNK_SIZE = 10 * 1024 * 1024
 
@@ -56,17 +58,51 @@ class MediaFixture:
     magic: bytes
 
 
-def load_state_file() -> tuple[str, str, str]:
-    if not STATE_FILE or not Path(STATE_FILE).exists():
-        return "", "", ""
-    data = json.loads(Path(STATE_FILE).read_text())
-    return str(data.get("gallery_id", "")), str(data.get("gallery_identifier", "")), str(data.get("gallery_secret_key", ""))
+def load_state_file() -> tuple[str, str]:
+    if not STATE_FILE:
+        return "", ""
+    path = Path(STATE_FILE)
+    try:
+        before = path.lstat()
+    except FileNotFoundError:
+        return "", ""
+    if not stat.S_ISREG(before.st_mode):
+        raise RuntimeError("lifecycle state path must be a regular file")
+    if before.st_mode & 0o077:
+        raise RuntimeError("lifecycle state file must be accessible only by its owner")
+
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    descriptor = os.open(path, flags)
+    with os.fdopen(descriptor, encoding="utf-8") as handle:
+        opened = os.fstat(handle.fileno())
+        if not stat.S_ISREG(opened.st_mode) or (opened.st_dev, opened.st_ino) != (before.st_dev, before.st_ino):
+            raise RuntimeError("lifecycle state file changed while opening")
+        data = json.load(handle)
+    return str(data.get("gallery_id", "")), str(data.get("gallery_identifier", ""))
 
 
-def save_state_file(gallery_id: int, identifier: str, secret_key: str) -> None:
+def save_state_file(gallery_id: int, identifier: str) -> None:
     if not STATE_FILE:
         return
-    Path(STATE_FILE).write_text(json.dumps({"gallery_id": gallery_id, "gallery_identifier": identifier, "gallery_secret_key": secret_key}))
+    path = Path(STATE_FILE)
+    descriptor, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    try:
+        os.fchmod(descriptor, 0o600)
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            json.dump({"gallery_id": gallery_id, "gallery_identifier": identifier}, handle)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    except BaseException:
+        try:
+            os.close(descriptor)
+        except OSError:
+            pass
+        try:
+            os.unlink(temporary)
+        except FileNotFoundError:
+            pass
+        raise
 
 
 def remove_state_file() -> None:
@@ -224,11 +260,11 @@ class Session:
             if "/Account/Login" in response.geturl() or "logout" not in account_html.lower():
                 raise RuntimeError("authenticated account page did not load")
 
-    def create_gallery(self) -> tuple[int, str, str]:
+    def create_gallery(self, requested_secret_key: str = "") -> tuple[int, str, str]:
         suffix = uuid.uuid4().hex[:12]
         name = "Lifecycle Smoke " + suffix
         identifier = "lifecycle-smoke-" + suffix
-        secret_key = "lifecycle-" + uuid.uuid4().hex
+        secret_key = requested_secret_key or ("lifecycle-" + uuid.uuid4().hex)
         result = self.post_form(
             "/Account/AddGallery",
             {"Id": "0", "Identifier": identifier, "Name": name, "Type": "1", "SecretKey": secret_key, "__RequestVerificationToken": self.token},
@@ -337,7 +373,7 @@ def main() -> int:
     existing_gallery_identifier = EXISTING_GALLERY_IDENTIFIER
     existing_gallery_secret_key = EXISTING_GALLERY_SECRET_KEY
     if STATE_FILE and (not existing_gallery_id or not existing_gallery_identifier):
-        existing_gallery_id, existing_gallery_identifier, existing_gallery_secret_key = load_state_file()
+        existing_gallery_id, existing_gallery_identifier = load_state_file()
 
     if existing_gallery_id and existing_gallery_identifier:
         session.gallery_token(existing_gallery_identifier)
@@ -351,12 +387,12 @@ def main() -> int:
                 print("cleanup=failed", file=sys.stderr)
         return 0
 
-    gallery_id, identifier, secret_key = session.create_gallery()
+    gallery_id, identifier, secret_key = session.create_gallery(NEW_GALLERY_SECRET_KEY)
     print("gallery_create_readback=passed")
     print(f"gallery_id={gallery_id}")
     print(f"gallery_identifier={identifier}")
     print(f"gallery_secret_key_present={str(bool(secret_key)).lower()}")
-    save_state_file(gallery_id, identifier, secret_key)
+    save_state_file(gallery_id, identifier)
     try:
         session.gallery_token(identifier)
         uploaded: list[MediaFixture] = []

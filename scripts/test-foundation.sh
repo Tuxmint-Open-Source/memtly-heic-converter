@@ -34,6 +34,7 @@ grep -Fq '"heic2any": "0.0.4"' patches/0001-client-heic-conversion.patch
 grep -Fq "$HEIC_CONVERTER_INTEGRITY" patches/0001-client-heic-conversion.patch
 node tests/scripts/verify-fixtures.mjs
 PYTHONPYCACHEPREFIX="${TMPDIR:-/tmp}/memtly-heic-pycache" python3 -m py_compile scripts/smoke-foundation.py scripts/smoke-lifecycle.py
+PYTHONPYCACHEPREFIX="${TMPDIR:-/tmp}/memtly-heic-pycache" python3 tests/scripts/test-smoke-lifecycle-state.py
 while IFS= read -r patch; do
   case "$patch" in ''|'#'*) continue ;; esac
   test -f "patches/$patch"
