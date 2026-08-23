@@ -18,6 +18,7 @@ The current release-candidate source line is backed by public-safe reports:
 - [build provenance](build-provenance.md)
 - [browser conversion validation](validation-heic-candidate.md)
 - [fixture provenance](fixture-provenance.md)
+- [desktop cross-browser conversion validation](validation-desktop-browsers.md)
 - [unchanged media lifecycle validation](validation-lifecycle.md)
 
 ## Unsupported / unknown

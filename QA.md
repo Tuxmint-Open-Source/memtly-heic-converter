@@ -32,8 +32,8 @@ A change is not complete until applicable gates pass.
 ## Browser matrix
 
 - Current Safari on iPhone/iPad when hardware is available.
-- Safari on macOS or an equivalent WebKit gate.
-- Current Chrome/Chromium and Firefox desktop.
+- Safari on macOS when hardware is available; automated desktop WebKit is an additional regression gate.
+- Automated current Chromium, Firefox, and desktop WebKit projects.
 - Current Android Chrome when hardware is available.
 
 Automated browser emulation is useful but is not represented as real iPhone hardware validation. Use the [real-device Safari validation checklist](docs/real-device-safari-validation.md) before making any production-ready claim.
