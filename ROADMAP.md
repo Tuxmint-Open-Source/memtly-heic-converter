@@ -25,6 +25,7 @@ This roadmap is directional and best-effort. It is not a delivery-date commitmen
 - Clone-visible security policy defines pre-release support, private intake, vulnerability scope, safe evidence, and coordinated disclosure.
 - CodeQL scans repository-owned JavaScript/TypeScript, Python, and GitHub Actions; patch-text and runtime media behavior remain covered by the dedicated project gates.
 - Checksum-verified ShellCheck `0.11.0` scans the complete tracked shell-program inventory at style severity.
+- Checksum-verified actionlint `1.7.12` semantically validates the complete tracked GitHub Actions workflow inventory.
 
 ## Later / decisions needed
 

@@ -21,4 +21,6 @@ CodeQL analyzes repository-owned JavaScript/TypeScript, Python, and GitHub Actio
 
 ShellCheck analyzes every tracked `.sh` and `.bash` program at style severity through a pinned, checksum-verified release. Keep inline suppressions narrow and include a comment explaining why the literal or construct is intentional.
 
+actionlint semantically validates every tracked GitHub Actions workflow through a pinned, checksum-verified release. Do not rely on generic YAML parsing alone for expression contexts, matrix scope, event filters, permissions, or workflow-specific schema.
+
 Follow [SECURITY.md](SECURITY.md) for suspected vulnerabilities. Do not disclose exploit details, sensitive evidence, personal media, or private infrastructure in public issues or pull requests.
