@@ -25,4 +25,6 @@ actionlint semantically validates every tracked GitHub Actions workflow through 
 
 hadolint validates every tracked Dockerfile through a pinned, checksum-verified release. Keep `.hadolint.yaml` exceptions exact and documented; `DL3059` is allowed only for the intentional test/restore/build/publish/artifact-verification cache boundaries.
 
+Ruff validates every tracked Python program through a pinned, checksum-verified release using the explicit `E4,E7,E9,F,I,EXE,B,UP` rule set. Do not expand the rule set or enable formatting without a separately measured baseline and focused review.
+
 Follow [SECURITY.md](SECURITY.md) for suspected vulnerabilities. Do not disclose exploit details, sensitive evidence, personal media, or private infrastructure in public issues or pull requests.

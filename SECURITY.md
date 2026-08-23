@@ -66,7 +66,7 @@ A fix is not considered released merely because it exists on `main`. Release-spe
 
 ## Security controls and limitations
 
-The repository uses private vulnerability reporting, dependency alerts/security updates, secret scanning with push protection, immutable GitHub Action pins, a required read-only quality gate, explicit CodeQL scanning for repository-owned JavaScript/TypeScript, Python, and GitHub Actions, checksum-verified ShellCheck scanning for tracked shell programs, checksum-verified actionlint semantic validation for tracked workflows, checksum-verified hadolint validation for tracked Dockerfiles, public-safety checks, exact upstream source guards, and published image provenance/attestation.
+The repository uses private vulnerability reporting, dependency alerts/security updates, secret scanning with push protection, immutable GitHub Action pins, a required read-only quality gate, explicit CodeQL scanning for repository-owned JavaScript/TypeScript, Python, and GitHub Actions, checksum-verified ShellCheck scanning for tracked shell programs, checksum-verified actionlint semantic validation for tracked workflows, checksum-verified hadolint validation for tracked Dockerfiles, checksum-verified Ruff validation for tracked Python programs, public-safety checks, exact upstream source guards, and published image provenance/attestation.
 
 These controls reduce risk but are not a guarantee. In particular:
 

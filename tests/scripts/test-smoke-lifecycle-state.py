@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Regression tests for lifecycle state-file handling."""
 
 from __future__ import annotations
@@ -25,13 +24,13 @@ class LifecycleStateTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory()
         self.path = Path(self.temporary.name) / "state.json"
-        self.previous = getattr(SMOKE, "STATE_FILE")
-        self.previous_new_secret = getattr(SMOKE, "NEW_GALLERY_SECRET_KEY")
-        setattr(SMOKE, "STATE_FILE", str(self.path))
+        self.previous = SMOKE.STATE_FILE
+        self.previous_new_secret = SMOKE.NEW_GALLERY_SECRET_KEY
+        SMOKE.STATE_FILE = str(self.path)
 
     def tearDown(self) -> None:
-        setattr(SMOKE, "STATE_FILE", self.previous)
-        setattr(SMOKE, "NEW_GALLERY_SECRET_KEY", self.previous_new_secret)
+        SMOKE.STATE_FILE = self.previous
+        SMOKE.NEW_GALLERY_SECRET_KEY = self.previous_new_secret
         self.temporary.cleanup()
 
     def test_round_trip_excludes_secret_and_uses_owner_only_mode(self) -> None:
@@ -46,13 +45,13 @@ class LifecycleStateTests(unittest.TestCase):
         self.assertNotIn("secret", self.path.read_text().lower())
 
     def test_caller_supplied_secret_is_not_part_of_state_contract(self) -> None:
-        setattr(SMOKE, "NEW_GALLERY_SECRET_KEY", "caller-held-secret")
+        SMOKE.NEW_GALLERY_SECRET_KEY = "caller-held-secret"
         try:
             SMOKE.save_state_file(43, "caller-held")
             self.assertEqual(SMOKE.load_state_file(), ("43", "caller-held"))
             self.assertNotIn("caller-held-secret", self.path.read_text())
         finally:
-            setattr(SMOKE, "NEW_GALLERY_SECRET_KEY", "")
+            SMOKE.NEW_GALLERY_SECRET_KEY = ""
 
     def test_rejects_group_or_world_accessible_state(self) -> None:
         self.path.write_text('{"gallery_id": 42, "gallery_identifier": "generated"}')

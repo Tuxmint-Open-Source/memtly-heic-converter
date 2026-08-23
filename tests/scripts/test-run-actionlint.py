@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Regression tests for verified actionlint acquisition and workflow inventory."""
 
 from __future__ import annotations
@@ -11,8 +10,8 @@ import sys
 import tarfile
 import tempfile
 import unittest
-from unittest import mock
 from pathlib import Path
+from unittest import mock
 
 SCRIPT = Path(__file__).resolve().parents[2] / "scripts" / "run-actionlint.py"
 SPEC = importlib.util.spec_from_file_location("run_actionlint", SCRIPT)

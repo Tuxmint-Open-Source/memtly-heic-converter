@@ -42,6 +42,9 @@ python3 scripts/run-actionlint.py
 python3 tests/scripts/test-run-hadolint.py
 ./scripts/check-hadolint-workflow.py
 python3 scripts/run-hadolint.py
+python3 tests/scripts/test-run-ruff.py
+./scripts/check-ruff-workflow.py
+python3 scripts/run-ruff.py
 ./scripts/check-dependabot-config.py
 ./scripts/check-workflow-actions.py
 python3 scripts/check-upstream-drift.py --check
@@ -57,6 +60,8 @@ The [ShellCheck workflow](.github/workflows/shellcheck.yml) scans every tracked 
 The [actionlint workflow](.github/workflows/actionlint.yml) validates the semantic structure, expressions, contexts, matrices, events, and permissions of every tracked GitHub Actions workflow. Its runner pins actionlint `1.7.12`, verifies the official Linux x86_64 release artifact before extraction, and derives the workflow inventory from Git.
 
 The [hadolint workflow](.github/workflows/hadolint.yml) scans every tracked Dockerfile with hadolint `2.15.1` after verifying the official Linux x86_64 binary. The sole configured exception is informational rule `DL3059`: separate test, restore, build, publish, and artifact-verification layers are intentional cache and review boundaries.
+
+The [Ruff workflow](.github/workflows/ruff.yml) scans every tracked Python program with Ruff `0.16.4` after checksum-verifying the official Linux x86_64 archive. Its explicit `E4,E7,E9,F,I,EXE,B,UP` rule set covers core syntax/correctness, imports, executable contracts, Bugbear checks, and Python upgrades without imposing repository-wide formatting or broad subprocess-policy suppressions.
 
 ## Foundation image
 

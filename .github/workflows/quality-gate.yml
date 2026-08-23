@@ -72,6 +72,12 @@ jobs:
       - name: Verify hadolint workflow contract
         run: ./scripts/check-hadolint-workflow.py
 
+      - name: Test verified Ruff acquisition and inventory
+        run: python3 tests/scripts/test-run-ruff.py
+
+      - name: Verify Ruff workflow contract
+        run: ./scripts/check-ruff-workflow.py
+
       - name: Verify Dependabot maintenance config
         run: ./scripts/check-dependabot-config.py
 
