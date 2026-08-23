@@ -57,11 +57,12 @@ MEMTLY_SMOKE_MEDIA_FIXTURE_DIR=/path/to/generated-fixtures
 MEMTLY_SMOKE_STRESS_IMAGES=150
 MEMTLY_SMOKE_KEEP_GALLERY=true
 MEMTLY_SMOKE_STATE_FILE=/tmp/memtly-lifecycle-state.json
+MEMTLY_SMOKE_NEW_GALLERY_SECRET_KEY=<caller-generated temporary value>
 ```
 
 When `MEMTLY_SMOKE_MEDIA_FIXTURE_DIR` is omitted, the script generates ordinary JPEG/PNG/MP4/MOV fixtures locally. If the target host lacks a video encoder, generate the fixtures on a build host and pass the directory through `MEMTLY_SMOKE_MEDIA_FIXTURE_DIR`.
 
-The keep/state-file mode is for validation jobs that intentionally keep a temporary gallery across a container recreation and then validate and remove the same gallery in a second script invocation. The state file is runtime-local validation state and must not be committed.
+The keep/state-file mode is for validation jobs that intentionally keep a temporary gallery across a container recreation and then validate and remove the same gallery in a second script invocation. The owner-only runtime state contains only the temporary gallery ID and identifier; the gallery access secret is not persisted. For a protected gallery, the orchestrator must hold a generated value outside the state file: pass it as `MEMTLY_SMOKE_NEW_GALLERY_SECRET_KEY` to the first invocation and `MEMTLY_SMOKE_EXISTING_GALLERY_SECRET_KEY` to the resumed invocation. The state file must not be committed.
 
 ## What this validates
 
