@@ -22,6 +22,7 @@ All notable changes to this project are documented here. This project follows se
 - Lifecycle recreation validation no longer persists the generated temporary gallery access secret and now enforces owner-only, symlink-safe runtime state handling.
 - Verified ShellCheck `0.11.0` coverage for every tracked shell program, with checksum-before-extraction acquisition and deterministic workflow tests.
 - Verified actionlint `1.7.12` semantic validation for every tracked GitHub Actions workflow, with checksum-before-extraction acquisition and deterministic workflow tests.
+- Verified hadolint `2.15.1` coverage for every tracked Dockerfile, with checksum-before-execution acquisition, deterministic tests, and remediation of measured directory-switch and pipeline findings.
 
 ### Validated
 

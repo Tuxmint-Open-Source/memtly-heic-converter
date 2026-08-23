@@ -23,4 +23,6 @@ ShellCheck analyzes every tracked `.sh` and `.bash` program at style severity th
 
 actionlint semantically validates every tracked GitHub Actions workflow through a pinned, checksum-verified release. Do not rely on generic YAML parsing alone for expression contexts, matrix scope, event filters, permissions, or workflow-specific schema.
 
+hadolint validates every tracked Dockerfile through a pinned, checksum-verified release. Keep `.hadolint.yaml` exceptions exact and documented; `DL3059` is allowed only for the intentional test/restore/build/publish/artifact-verification cache boundaries.
+
 Follow [SECURITY.md](SECURITY.md) for suspected vulnerabilities. Do not disclose exploit details, sensitive evidence, personal media, or private infrastructure in public issues or pull requests.

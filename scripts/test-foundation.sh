@@ -22,7 +22,11 @@ done
 # The literal Dockerfile contract intentionally contains an unexpanded shell expression.
 # shellcheck disable=SC2016
 grep -Fq 'git cat-file -t "refs/tags/${MEMTLY_COMMUNITY_TAG}"' Dockerfile
-grep -Fq 'git ls-tree HEAD Memtly.Core' Dockerfile
+grep -Fq 'git ls-tree --format=' Dockerfile
+grep -Fq "%(objectname)' HEAD Memtly.Core" Dockerfile
+# The npm parameter expansion is intentionally asserted as literal Dockerfile text.
+# shellcheck disable=SC2016
+grep -Fq 'npm_major="${npm_version%%.*}"' Dockerfile
 grep -Fq 'git apply --check' Dockerfile
 grep -Fq 'test -s /app/publish/wwwroot/_content/Memtly.Core/dist/manifest.json' Dockerfile
 grep -Fq "Memtly.Core.wwwroot.dist.manifest.json" Dockerfile

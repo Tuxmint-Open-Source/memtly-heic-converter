@@ -1,0 +1,4 @@
+# Separate test, restore, build, publish, and artifact-verification layers are
+# intentional cache and review boundaries in this reproducible overlay build.
+ignored:
+  - DL3059
