@@ -32,6 +32,7 @@ npm audit
 ./scripts/check-public-safety.py
 ./scripts/check-community-files.py
 ./scripts/check-security-policy.py
+./scripts/check-codeql-workflow.py
 ./scripts/check-dependabot-config.py
 ./scripts/check-workflow-actions.py
 python3 scripts/check-upstream-drift.py --check
@@ -39,6 +40,8 @@ python3 scripts/check-upstream-drift.py --check
 ```
 
 Without runtime variables, the browser suite enumerates all configured projects and skips the live upload case. Exact-image browser evidence is recorded separately in the validation reports.
+
+The separate [Code scanning workflow](.github/workflows/codeql.yml) analyzes repository-owned JavaScript/TypeScript, Python, and GitHub Actions with CodeQL on pull requests, `main`, manual dispatches, and a weekly schedule. It does not parse JavaScript embedded inside the upstream overlay patch as JavaScript source, so CodeQL complements rather than replaces fixture, browser, patch-apply, and exact-artifact validation.
 
 ## Foundation image
 
