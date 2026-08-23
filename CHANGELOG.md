@@ -14,6 +14,7 @@ All notable changes to this project are documented here. This project follows se
 - Release workflow for publishing pre-release images to GitHub Container Registry.
 - Public upstream drift monitor for the pinned Memtly refs and watched patch-surface files.
 - Real-device Safari validation checklist for iPhone/iPad hardware testing before production-ready claims.
+- Read-only pull-request quality gate with reusable exact-upstream patch-apply and public-safety checks.
 
 ### Validated
 

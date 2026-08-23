@@ -18,6 +18,22 @@ The first compatibility target is:
 
 Follow the [public roadmap](ROADMAP.md), [compatibility matrix](docs/compatibility.md), and pinned roadmap issue for current work.
 
+## Quality gates
+
+Pull requests and `main` pushes run the read-only [quality gate](.github/workflows/quality-gate.yml). Run the same core checks locally with:
+
+```bash
+npm ci
+./scripts/test-foundation.sh
+npm run test:browser
+npm audit
+./scripts/check-public-safety.py
+python3 scripts/check-upstream-drift.py --check
+./scripts/check-patch-apply.sh
+```
+
+Without runtime variables, the browser suite enumerates all configured projects and skips the live upload case. Exact-image browser evidence is recorded separately in the validation reports.
+
 ## Foundation image
 
 Issue #1 established the merged Memtly `1.0.6` control image. The build verifies the annotated Community tag, Community commit, Core gitlink, and checked-out Core commit, then applies the committed patch series with drift checks.

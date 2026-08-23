@@ -12,3 +12,5 @@ Please open an issue before substantial implementation work. Keep pull requests 
 This project is independent from Memtly. Reproduce suspected upstream bugs with an unmodified official image before reporting them upstream.
 
 AI-assisted contributions are accepted when disclosed and human-reviewed. Contributors remain responsible for correctness, licensing, security, and test evidence.
+
+Before opening a pull request, run the commands documented under [Quality gates](README.md#quality-gates). The GitHub Actions quality gate uses read-only repository permissions and does not require private deployment access.
