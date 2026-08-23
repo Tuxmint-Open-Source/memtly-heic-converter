@@ -31,6 +31,7 @@ npm run test:browser
 npm audit
 ./scripts/check-public-safety.py
 ./scripts/check-community-files.py
+./scripts/check-security-policy.py
 ./scripts/check-dependabot-config.py
 ./scripts/check-workflow-actions.py
 python3 scripts/check-upstream-drift.py --check
@@ -75,7 +76,7 @@ The project aims to build from an exact upstream Memtly ref and apply a small, r
 - Browser conversion can be memory-intensive on mobile devices, so conversion will be sequential and bounded.
 - HEVC/HEIC codec patents may matter in some jurisdictions. Open-source licensing is not a patent opinion.
 
-See [docs/architecture.md](docs/architecture.md), [QA.md](QA.md), and [SECURITY.md](SECURITY.md).
+See [docs/architecture.md](docs/architecture.md), [QA.md](QA.md), and the clone-visible [security policy](SECURITY.md). Suspected vulnerabilities must use GitHub private vulnerability reporting rather than public issues or pull requests.
 
 ## Licensing and transparency
 

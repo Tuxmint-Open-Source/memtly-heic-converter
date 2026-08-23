@@ -16,3 +16,5 @@ AI-assisted contributions are accepted when disclosed and human-reviewed. Contri
 Before opening a pull request, run the commands documented under [Quality gates](README.md#quality-gates). The GitHub Actions quality gate uses read-only repository permissions and does not require private deployment access. Use the structured issue forms and pull-request template; do not replace their public-safety confirmations with raw logs or private deployment evidence.
 
 Dependabot updates are grouped by ecosystem and remain normal reviewable pull requests. GitHub Actions references must stay pinned to immutable full commit SHAs, and coupled Action updates should remain together rather than being merged independently.
+
+Follow [SECURITY.md](SECURITY.md) for suspected vulnerabilities. Do not disclose exploit details, sensitive evidence, personal media, or private infrastructure in public issues or pull requests.
