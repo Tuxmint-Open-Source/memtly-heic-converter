@@ -1,5 +1,7 @@
 # Memtly HEIC Converter
 
+[![Quality gate](https://github.com/Tuxmint-Open-Source/memtly-heic-converter/actions/workflows/quality-gate.yml/badge.svg?branch=main)](https://github.com/Tuxmint-Open-Source/memtly-heic-converter/actions/workflows/quality-gate.yml)
+
 A feature-flagged build overlay for converting HEIC/HEIF still images to JPEG **in the guest's browser before upload** to [Memtly Community](https://github.com/Memtly/Memtly.Community).
 
 > [!IMPORTANT]
@@ -20,7 +22,7 @@ Follow the [public roadmap](ROADMAP.md), [compatibility matrix](docs/compatibili
 
 ## Quality gates
 
-Pull requests and `main` pushes run the read-only [quality gate](.github/workflows/quality-gate.yml). Run the same core checks locally with:
+Pull requests and `main` pushes run the read-only [quality gate](.github/workflows/quality-gate.yml). The App-bound `Project quality gate` check is required for `main`, and pull-request branches must be current with `main`. Run the same core checks locally with:
 
 ```bash
 npm ci
