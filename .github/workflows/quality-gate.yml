@@ -51,6 +51,9 @@ jobs:
       - name: Verify repository security policy
         run: ./scripts/check-security-policy.py
 
+      - name: Verify CodeQL workflow contract
+        run: ./scripts/check-codeql-workflow.py
+
       - name: Verify Dependabot maintenance config
         run: ./scripts/check-dependabot-config.py
 

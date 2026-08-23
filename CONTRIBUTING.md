@@ -17,4 +17,6 @@ Before opening a pull request, run the commands documented under [Quality gates]
 
 Dependabot updates are grouped by ecosystem and remain normal reviewable pull requests. GitHub Actions references must stay pinned to immutable full commit SHAs, and coupled Action updates should remain together rather than being merged independently.
 
+CodeQL analyzes repository-owned JavaScript/TypeScript, Python, and GitHub Actions. Treat it as one security signal: it does not scan JavaScript embedded as patch text and does not replace the project quality gate or runtime validation.
+
 Follow [SECURITY.md](SECURITY.md) for suspected vulnerabilities. Do not disclose exploit details, sensitive evidence, personal media, or private infrastructure in public issues or pull requests.

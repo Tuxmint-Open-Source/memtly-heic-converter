@@ -23,6 +23,7 @@ This roadmap is directional and best-effort. It is not a delivery-date commitmen
 - Structured issue/PR intake and a Contributor Covenant code of conduct provide public-safe community reporting paths.
 - Weekly grouped Dependabot maintenance covers the repository's npm and GitHub Actions dependency surfaces.
 - Clone-visible security policy defines pre-release support, private intake, vulnerability scope, safe evidence, and coordinated disclosure.
+- CodeQL scans repository-owned JavaScript/TypeScript, Python, and GitHub Actions; patch-text and runtime media behavior remain covered by the dedicated project gates.
 
 ## Later / decisions needed
 
