@@ -113,7 +113,7 @@ test('valid HEIC fixture is converted before Memtly upload and malformed HEIC fa
     await expect.poll(async () => page.evaluate(() => window.__memtlyUploadProbe.requests.filter(request => request.url.includes('/Gallery/UploadFileChunk')).length), { timeout: 30000 }).toBe(2);
   } catch (error) {
     const diagnostics = browserDiagnostics.length ? browserDiagnostics.join('\n') : 'none captured';
-    throw new Error(`${error.message}\nBrowser diagnostics:\n${diagnostics}`);
+    throw new Error(`${error.message}\nBrowser diagnostics:\n${diagnostics}`, { cause: error });
   }
   const probe = await page.evaluate(() => window.__memtlyUploadProbe);
   const uploadedFiles = probe.requests.flatMap(request => request.files).filter(candidate => candidate.field === 'File');

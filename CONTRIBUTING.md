@@ -27,4 +27,6 @@ hadolint validates every tracked Dockerfile through a pinned, checksum-verified 
 
 Ruff validates every tracked Python program through a pinned, checksum-verified release using the explicit `E4,E7,E9,F,I,EXE,B,UP` rule set. Do not expand the rule set or enable formatting without a separately measured baseline and focused review.
 
+ESLint validates every tracked JavaScript module with exact package/lockfile pins and recommended rules. Keep Node and browser globals scoped in `eslint.config.mjs`; do not use blanket global declarations or inline disables to hide execution-context errors.
+
 Follow [SECURITY.md](SECURITY.md) for suspected vulnerabilities. Do not disclose exploit details, sensitive evidence, personal media, or private infrastructure in public issues or pull requests.

@@ -78,6 +78,12 @@ jobs:
       - name: Verify Ruff workflow contract
         run: ./scripts/check-ruff-workflow.py
 
+      - name: Test tracked JavaScript inventory and invocation
+        run: node --test tests/scripts/test-run-eslint.mjs
+
+      - name: Verify ESLint workflow contract
+        run: ./scripts/check-eslint-workflow.py
+
       - name: Verify Dependabot maintenance config
         run: ./scripts/check-dependabot-config.py
 
