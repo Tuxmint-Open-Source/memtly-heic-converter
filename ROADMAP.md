@@ -24,6 +24,7 @@ This roadmap is directional and best-effort. It is not a delivery-date commitmen
 - Weekly grouped Dependabot maintenance covers the repository's npm and GitHub Actions dependency surfaces.
 - Clone-visible security policy defines pre-release support, private intake, vulnerability scope, safe evidence, and coordinated disclosure.
 - CodeQL scans repository-owned JavaScript/TypeScript, Python, and GitHub Actions; patch-text and runtime media behavior remain covered by the dedicated project gates.
+- Checksum-verified ShellCheck `0.11.0` scans the complete tracked shell-program inventory at style severity.
 
 ## Later / decisions needed
 

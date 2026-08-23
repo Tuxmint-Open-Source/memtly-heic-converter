@@ -33,6 +33,9 @@ npm audit
 ./scripts/check-community-files.py
 ./scripts/check-security-policy.py
 ./scripts/check-codeql-workflow.py
+python3 tests/scripts/test-run-shellcheck.py
+./scripts/check-shellcheck-workflow.py
+python3 scripts/run-shellcheck.py
 ./scripts/check-dependabot-config.py
 ./scripts/check-workflow-actions.py
 python3 scripts/check-upstream-drift.py --check
@@ -42,6 +45,8 @@ python3 scripts/check-upstream-drift.py --check
 Without runtime variables, the browser suite enumerates all configured projects and skips the live upload case. Exact-image browser evidence is recorded separately in the validation reports.
 
 The separate [Code scanning workflow](.github/workflows/codeql.yml) analyzes repository-owned JavaScript/TypeScript, Python, and GitHub Actions with CodeQL on pull requests, `main`, manual dispatches, and a weekly schedule. It does not parse JavaScript embedded inside the upstream overlay patch as JavaScript source, so CodeQL complements rather than replaces fixture, browser, patch-apply, and exact-artifact validation.
+
+The [ShellCheck workflow](.github/workflows/shellcheck.yml) scans every tracked `.sh` and `.bash` program at style severity. Its runner pins ShellCheck `0.11.0`, verifies the official Linux x86_64 release artifact before extraction, and derives the scan inventory from Git. It does not treat shell snippets embedded in documentation, Dockerfiles, patch text, or private deployment helpers as repository-owned shell programs.
 
 ## Foundation image
 

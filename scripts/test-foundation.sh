@@ -19,6 +19,8 @@ for value in "$MEMTLY_COMMUNITY_TAG" "$MEMTLY_COMMUNITY_COMMIT" "$MEMTLY_CORE_CO
   test "$(grep -Fo "$value" Dockerfile | wc -l)" -ge 1
 done
 
+# The literal Dockerfile contract intentionally contains an unexpanded shell expression.
+# shellcheck disable=SC2016
 grep -Fq 'git cat-file -t "refs/tags/${MEMTLY_COMMUNITY_TAG}"' Dockerfile
 grep -Fq 'git ls-tree HEAD Memtly.Core' Dockerfile
 grep -Fq 'git apply --check' Dockerfile

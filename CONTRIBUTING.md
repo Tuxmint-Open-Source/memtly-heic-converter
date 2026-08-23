@@ -19,4 +19,6 @@ Dependabot updates are grouped by ecosystem and remain normal reviewable pull re
 
 CodeQL analyzes repository-owned JavaScript/TypeScript, Python, and GitHub Actions. Treat it as one security signal: it does not scan JavaScript embedded as patch text and does not replace the project quality gate or runtime validation.
 
+ShellCheck analyzes every tracked `.sh` and `.bash` program at style severity through a pinned, checksum-verified release. Keep inline suppressions narrow and include a comment explaining why the literal or construct is intentional.
+
 Follow [SECURITY.md](SECURITY.md) for suspected vulnerabilities. Do not disclose exploit details, sensitive evidence, personal media, or private infrastructure in public issues or pull requests.

@@ -20,6 +20,7 @@ All notable changes to this project are documented here. This project follows se
 - Expanded clone-visible security policy covering supported refs, private intake, vulnerability scope, safe evidence, and coordinated disclosure.
 - Explicit CodeQL scanning for repository-owned JavaScript/TypeScript, Python, and GitHub Actions, with a deterministic workflow contract in the required quality gate.
 - Lifecycle recreation validation no longer persists the generated temporary gallery access secret and now enforces owner-only, symlink-safe runtime state handling.
+- Verified ShellCheck `0.11.0` coverage for every tracked shell program, with checksum-before-extraction acquisition and deterministic workflow tests.
 
 ### Validated
 

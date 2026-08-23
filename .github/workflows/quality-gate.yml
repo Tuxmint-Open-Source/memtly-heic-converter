@@ -54,6 +54,12 @@ jobs:
       - name: Verify CodeQL workflow contract
         run: ./scripts/check-codeql-workflow.py
 
+      - name: Test verified ShellCheck acquisition and inventory
+        run: python3 tests/scripts/test-run-shellcheck.py
+
+      - name: Verify ShellCheck workflow contract
+        run: ./scripts/check-shellcheck-workflow.py
+
       - name: Verify Dependabot maintenance config
         run: ./scripts/check-dependabot-config.py
 
