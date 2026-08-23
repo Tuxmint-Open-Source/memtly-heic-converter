@@ -16,6 +16,7 @@ All notable changes to this project are documented here. This project follows se
 - Real-device Safari validation checklist for iPhone/iPad hardware testing before production-ready claims.
 - Read-only pull-request quality gate with reusable exact-upstream patch-apply and public-safety checks.
 - Structured public-safe issue/PR intake templates and Contributor Covenant code of conduct.
+- Weekly grouped Dependabot maintenance for npm development dependencies and GitHub Actions.
 
 ### Validated
 

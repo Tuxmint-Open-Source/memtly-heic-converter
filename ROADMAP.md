@@ -21,6 +21,7 @@ This roadmap is directional and best-effort. It is not a delivery-date commitmen
 - Automated conversion regression passes in Chromium, Firefox, and desktop WebKit against the exact published image digest.
 - Read-only pull-request CI enforces foundation, fixture, browser-contract, dependency-audit, upstream-baseline, patch-apply, whitespace, and public-safety checks.
 - Structured issue/PR intake and a Contributor Covenant code of conduct provide public-safe community reporting paths.
+- Weekly grouped Dependabot maintenance covers the repository's npm and GitHub Actions dependency surfaces.
 
 ## Later / decisions needed
 
