@@ -1,0 +1,81 @@
+name: Bug report
+description: Report a reproducible problem without exposing private data
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve this project. Do not include credentials, private endpoints, internal hostnames or topology, raw logs, database contents, personal photos, or guest-identifying metadata. Use GitHub private vulnerability reporting for security issues.
+  - type: input
+    id: converter_release
+    attributes:
+      label: Converter release or commit
+      description: Provide the immutable release tag/digest or exact commit tested.
+      placeholder: v0.1.0-rc.1 or a full commit ID
+    validations:
+      required: true
+  - type: input
+    id: memtly_release
+    attributes:
+      label: Memtly release and commit
+      description: Provide the exact upstream Memtly release/ref when known.
+      placeholder: Memtly 1.0.6 at an exact commit
+    validations:
+      required: true
+  - type: dropdown
+    id: workflow
+    attributes:
+      label: Affected workflow
+      options:
+        - HEIC/HEIF conversion
+        - Ordinary media upload
+        - Thumbnail or gallery rendering
+        - Download or deletion
+        - Build or publication
+        - Documentation or validation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Public-safe browser/device details
+      description: Distinguish real hardware from emulation. Include browser and OS versions, but no device IDs, private URLs, account names, or infrastructure details.
+      placeholder: Real iPhone Safari / desktop Firefox / Playwright WebKit, with public version information
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Sanitized reproduction steps
+      description: Use non-personal fixtures and omit raw logs or deployment details.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: upstream_control
+    attributes:
+      label: Unmodified upstream control result
+      description: If applicable, state whether the problem reproduces with an unmodified official Memtly image. Do not report overlay-only behavior upstream.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Public-safety confirmation
+      options:
+        - label: I removed credentials, private infrastructure details, access paths, raw logs, database contents, and personal media.
+          required: true
+        - label: This is not a vulnerability report requiring private handling.
+          required: true

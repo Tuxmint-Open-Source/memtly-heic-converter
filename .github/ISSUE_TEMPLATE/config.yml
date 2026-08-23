@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/Tuxmint-Open-Source/memtly-heic-converter/security/advisories/new
+    about: Do not disclose vulnerabilities, credentials, private infrastructure, or sensitive media in a public issue.
+  - name: Public development roadmap
+    url: https://github.com/Tuxmint-Open-Source/memtly-heic-converter/issues/7
+    about: Review current priorities and existing scoped work before opening a request.

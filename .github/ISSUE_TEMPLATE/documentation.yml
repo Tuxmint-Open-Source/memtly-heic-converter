@@ -1,0 +1,32 @@
+name: Documentation improvement
+description: Report unclear, missing, or inaccurate public documentation
+title: "[Docs]: "
+labels:
+  - documentation
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Document or section
+      placeholder: README section or docs/file.md
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is unclear or inaccurate?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested improvement
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Public-safety confirmation
+      options:
+        - label: Examples and screenshots contain no credentials, private infrastructure details, raw logs, private gallery links, or personal media.
+          required: true

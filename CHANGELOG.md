@@ -15,6 +15,7 @@ All notable changes to this project are documented here. This project follows se
 - Public upstream drift monitor for the pinned Memtly refs and watched patch-surface files.
 - Real-device Safari validation checklist for iPhone/iPad hardware testing before production-ready claims.
 - Read-only pull-request quality gate with reusable exact-upstream patch-apply and public-safety checks.
+- Structured public-safe issue/PR intake templates and Contributor Covenant code of conduct.
 
 ### Validated
 
