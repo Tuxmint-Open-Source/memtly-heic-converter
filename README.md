@@ -48,6 +48,9 @@ python3 scripts/run-ruff.py
 node --test tests/scripts/test-run-eslint.mjs
 ./scripts/check-eslint-workflow.py
 node scripts/run-eslint.mjs
+node --test tests/scripts/test-run-markdownlint.mjs
+./scripts/check-markdownlint-workflow.py
+node scripts/run-markdownlint.mjs
 ./scripts/check-dependabot-config.py
 ./scripts/check-workflow-actions.py
 python3 scripts/check-upstream-drift.py --check
@@ -67,6 +70,8 @@ The [hadolint workflow](.github/workflows/hadolint.yml) scans every tracked Dock
 The [Ruff workflow](.github/workflows/ruff.yml) scans every tracked Python program with Ruff `0.16.4` after checksum-verifying the official Linux x86_64 archive. Its explicit `E4,E7,E9,F,I,EXE,B,UP` rule set covers core syntax/correctness, imports, executable contracts, Bugbear checks, and Python upgrades without imposing repository-wide formatting or broad subprocess-policy suppressions.
 
 The [ESLint workflow](.github/workflows/eslint.yml) scans every tracked `.js`, `.mjs`, and `.cjs` module with exact lockfile-pinned ESLint `10.9.0` and recommended rules. The runner derives the complete source inventory from Git, models Node and Playwright browser contexts explicitly, and runs cache-free. JavaScript embedded inside the overlay patch remains covered by patch application and browser/runtime validation rather than source linting.
+
+The [Markdownlint workflow](.github/workflows/markdownlint.yml) validates every tracked Markdown file with exact lockfile-pinned markdownlint-cli2 `0.23.2`. Its measured policy disables prose line length globally and first-heading enforcement only for the section-oriented pull-request template and verbatim third-party license; every other default rule remains active.
 
 ## Foundation image
 

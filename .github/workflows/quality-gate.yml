@@ -84,6 +84,12 @@ jobs:
       - name: Verify ESLint workflow contract
         run: ./scripts/check-eslint-workflow.py
 
+      - name: Test tracked Markdown inventory and invocation
+        run: node --test tests/scripts/test-run-markdownlint.mjs
+
+      - name: Verify Markdownlint workflow contract
+        run: ./scripts/check-markdownlint-workflow.py
+
       - name: Verify Dependabot maintenance config
         run: ./scripts/check-dependabot-config.py
 

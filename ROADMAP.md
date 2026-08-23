@@ -29,6 +29,7 @@ This roadmap is directional and best-effort. It is not a delivery-date commitmen
 - Checksum-verified hadolint `2.15.1` validates the complete tracked Dockerfile inventory; the measured directory-switch and pipefail findings are remediated.
 - Checksum-verified Ruff `0.16.4` validates the complete tracked Python inventory with an explicit low-noise core rule set.
 - Lockfile-verified ESLint `10.9.0` validates the complete tracked JavaScript module inventory with explicit Node/browser contexts.
+- Lockfile-verified markdownlint-cli2 `0.23.2` validates the complete tracked Markdown inventory with narrowly contracted exceptions.
 
 ## Later / decisions needed
 

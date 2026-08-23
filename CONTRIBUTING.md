@@ -29,4 +29,6 @@ Ruff validates every tracked Python program through a pinned, checksum-verified 
 
 ESLint validates every tracked JavaScript module with exact package/lockfile pins and recommended rules. Keep Node and browser globals scoped in `eslint.config.mjs`; do not use blanket global declarations or inline disables to hide execution-context errors.
 
+Markdownlint validates every tracked Markdown file with exact package/lockfile pins. Keep exceptions narrow: `MD013` is disabled for prose readability, while `MD041` is disabled only for the pull-request template and verbatim third-party license.
+
 Follow [SECURITY.md](SECURITY.md) for suspected vulnerabilities. Do not disclose exploit details, sensitive evidence, personal media, or private infrastructure in public issues or pull requests.

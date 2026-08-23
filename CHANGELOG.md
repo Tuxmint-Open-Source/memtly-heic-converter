@@ -25,6 +25,7 @@ All notable changes to this project are documented here. This project follows se
 - Verified hadolint `2.15.1` coverage for every tracked Dockerfile, with checksum-before-execution acquisition, deterministic tests, and remediation of measured directory-switch and pipeline findings.
 - Verified Ruff `0.16.4` coverage for every tracked Python program, with checksum-before-extraction acquisition, deterministic tests, and remediation of measured core lint findings.
 - Lockfile-verified ESLint `10.9.0` coverage for every tracked JavaScript module, with deterministic inventory tests, explicit execution contexts, and preserved diagnostic error causes.
+- Lockfile-verified markdownlint-cli2 `0.23.2` coverage for every tracked Markdown file, with deterministic inventory tests and narrowly contracted baseline exceptions.
 
 ### Validated
 
