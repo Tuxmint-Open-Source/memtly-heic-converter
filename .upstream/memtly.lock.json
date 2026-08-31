@@ -5,8 +5,8 @@
     "community": {
       "commit": "d9b7298866c8cafbd515a6bf5e260e1d0423f262",
       "default_branch": "master",
-      "observed_default_branch_head": "4ad9d6b7175df87ec6d49ee36e584ee57bacc7ad",
-      "observed_latest_tag": "1.0.6",
+      "observed_default_branch_head": "c6ca638a87d31778d5a49267be38719769fa8f82",
+      "observed_latest_tag": "1.0.6.1",
       "repo": "https://github.com/Memtly/Memtly.Community.git",
       "tag": "1.0.6",
       "tag_object": "5a43747c41c1405128ca4ea6448a9b9260f1e2d3"
@@ -14,7 +14,7 @@
     "core": {
       "commit": "cc8c88d625136f04ae1f1063fc635f74e739bd72",
       "default_branch": "master",
-      "observed_default_branch_head": "cc8c88d625136f04ae1f1063fc635f74e739bd72",
+      "observed_default_branch_head": "7c1a98ec4ced0cd29b17b8a75a2b5fb5845beab7",
       "repo": "https://github.com/Memtly/Memtly.Core.git"
     }
   },
