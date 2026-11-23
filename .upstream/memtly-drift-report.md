@@ -11,13 +11,15 @@ A drift report is a review prompt, not a compatibility claim.
 
 ## Observed upstream state
 
-- Community default branch `master`: `4ad9d6b7175df87ec6d49ee36e584ee57bacc7ad`
-- Community latest tag: `1.0.6`
-- Core default branch `master`: `cc8c88d625136f04ae1f1063fc635f74e739bd72`
+- Community default branch `master`: `39d66291df55d099ec2cca9c56c142b9ea6b2e14`
+- Community latest tag: `1.0.7.7`
+- Core default branch `master`: `68c883bdda78c5413bdb00d8dc4b515db838bb8e`
 
 ## Drift summary
 
-- No drift detected.
+- `community.observed_default_branch_head` changed from `4ad9d6b7175df87ec6d49ee36e584ee57bacc7ad` to `39d66291df55d099ec2cca9c56c142b9ea6b2e14`.
+- `community.observed_latest_tag` changed from `1.0.6` to `1.0.7.7`.
+- `core.observed_default_branch_head` changed from `cc8c88d625136f04ae1f1063fc635f74e739bd72` to `68c883bdda78c5413bdb00d8dc4b515db838bb8e`.
 
 ## Review checklist
 
